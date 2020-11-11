@@ -9,49 +9,63 @@ ui <- fluidPage(
   # Application title
   titlePanel("Hyptothesis Testing"),
 
-  # Sidebar with a slider input for number of bins
+
+# Sidebar Design ----------------------------------------------------------
+
   sidebarLayout(
     sidebarPanel(
       selectInput(
         "test", "Type of Distribution:",
-        choices = c("Normal", "t", "χ^2", "F")
+        choices = c("Normal", "t", "Chi Square", "F"),
+        # width = "50%"
       ),
       conditionalPanel(
-        condition = "input.test == 'Normal'" ,
-        textInput(
-          "mu", "Mean", value = 0, width = "20%"
-        ),
-        textInput(
-          "sig", "Standard Deviation", value = 1, width = "20%"
+        condition = "input.test == 'Normal'",
+        fixedRow(
+          column(6,
+            numericInput("mu", "Mean", value = 0)
+          ),
+          column(6,
+            numericInput("sig", "SD", value = 1, min = 1)
+          )
         )
       ),
       conditionalPanel(
         condition = "input.test == 't'",
-        textInput(
-          "df", "Degrees of Freedom", value = 1, width = "20%"
+        fixedRow(
+          column(6,
+            numericInput("dft", "DF", value = 1, min = 1)
+          )
         )
       ),
       conditionalPanel(
-        condition = "input.test == 'χ^2'",
-        textInput(
-          "df", "Degrees of Freedom", value = 1, width = "20%"
+        condition = "input.test == 'Chi Square'",
+        fixedRow(
+          column(6,
+            numericInput("dfc", "DF", value = 1, min = 1)
+          )
         )
       ),
       conditionalPanel(
         condition = "input.test == 'F'",
-        textInput(
-          "df1", "First Degrees of Freedom", value = 1, width = "20%"
-        ),
-        textInput(
-          "df2", "Second Degrees of Freedom", value = 1, width = "20%"
+        fixedRow(
+          column(6,
+            numericInput("df1", "DF1", value = 1, min = 1)
+          ),
+          column(6,
+            numericInput("df2", "DF2", value = 1, min = 1)
+          )
         )
-      )
+      ),
+      width = 2
     ),
 
 
+# Main Panel Design -------------------------------------------------------
+
     # Show a plot of the generated distribution
     mainPanel(
-      # plotOutput("distPlot")
+      plotOutput("distPlot")
     )
   )
 )
