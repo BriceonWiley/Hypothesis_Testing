@@ -15,21 +15,59 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       selectInput(
-        "test", "Type of Distribution:",
-        choices = c("Normal", "t", "Chi Square", "F"),
+        "test", "Type of Test:",
+        choices = c(
+          "One Sample Proportion",
+          "One Sample Mean",
+          "Two Samples Mean"
+        ),
         # width = "50%"
       ),
+      # selectInput(
+      #   "test", "Type of Distribution:",
+      #   choices = c("Normal", "t", "Chi Square", "F"),
+      #   # width = "50%"
+      # ),
+
       conditionalPanel(
-        condition = "input.test == 'Normal'",
+        condition = "input.test == 'One Sample Proportion'",
         fixedRow(
           column(6,
-            numericInput("mu", "Mean", value = 0)
+            numericInput("p", "Hypothesized Proportion", value = 0.5)
+          ),
+        ),
+        fixedRow(
+          column(6,
+            selectInput(
+              "hypot", "Type of Hypothesis:",
+              choices = c("<=", ">=", "!=")
+            )
           ),
           column(6,
-            numericInput("sig", "SD", value = 1, min = 1)
+            numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
+          ),
+        ),
+        fixedRow(
+          column(6,
+            numericInput("phat", "Sample Proportion", value = 0.5)
+          ),
+          column(6,
+            numericInput("n", "Sample Size", value = 50)
           )
         )
       ),
+      # conditionalPanel(
+      #   condition = "input.test == 'Normal'",
+      #   fixedRow(
+      #     column(6,
+      #       numericInput("xbar", "Sample Mean", value = 0)
+      #     ),
+      #     column(6,
+      #       numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
+      #     )
+      #   )
+      # ),
+
       conditionalPanel(
         condition = "input.test == 't'",
         fixedRow(
