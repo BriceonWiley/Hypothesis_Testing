@@ -14,9 +14,9 @@ server <- function(input, output) {
 
     if (test_type == "One Sample Proportion") {
       p <- input$p
+      n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
-      n <- input$n
       alpha <- input$alpha
       lb <- p - 4 * sigma
       ub <- p + 4 * sigma
@@ -33,7 +33,8 @@ server <- function(input, output) {
           fun = dnorm, args = list(mean = p, sd = sigma),
           geom = "area", xlim = c(phat, ub),
           alpha = 0.5, fill = "grey"
-        )
+        ) +
+        theme_minimal()
     }
 # # Normal Distribution -----------------------------------------------------
 #
