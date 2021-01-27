@@ -32,9 +32,12 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.test == 'One Sample Proportion'",
         fixedRow(
-          column(6,
-            numericInput("p", "Hypothesized Proportion", value = 0.5)
-          ),
+          sliderInput("p", "Hypothesized Proportion:",
+            min = 0, max = 1,
+            value = 0.5, step = 0.01),
+          # column(6,
+          #   numericInput("p", "Hypothesized Proportion", value = 0.5)
+          # ),
         ),
         fixedRow(
           column(6,
@@ -49,7 +52,7 @@ ui <- fluidPage(
         ),
         fixedRow(
           column(6,
-            numericInput("phat", "Sample Proportion", value = 0.5)
+            numericInput("phat", "Sample Proportion", value = 0.5, min = 0, max = 1, step = 0.01)
           ),
           column(6,
             numericInput("n", "Sample Size", value = 50)
@@ -95,7 +98,7 @@ ui <- fluidPage(
           )
         )
       ),
-      width = 2
+      width = 3
     ),
 
 
