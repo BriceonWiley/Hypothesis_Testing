@@ -4,9 +4,7 @@ server <- function(input, output) {
 
   output$distPlot <- renderPlot({
     test_type <- input$test
-
-
-# One Sample Proportion ----------------------------------------------------
+# One Sample Proportion - Plot --------------------------------------------
 
     if (test_type == "One Sample Proportion") {
       # necessary set up
@@ -22,7 +20,8 @@ server <- function(input, output) {
       # base plot
       one_samp_prop <- ggplot() +
         stat_function(fun = dnorm, args = list(mean = p, sd = sigma)) +
-        geom_point(aes(x = phat, y = 0.0125), shape = 6, size = 7) +
+        geom_point(aes(x = phat, y = 0.25), shape = 6, size = 7) +
+        geom_point(aes(x = p, y = -0.25), shape = 17, size = 7) +
         lims(x = c(lb, ub)) +
         theme_minimal() +
         labs(x = "Sample Proporiton", y = "Probability")
@@ -81,7 +80,6 @@ server <- function(input, output) {
             }
           }
       }
-
     }
 # # Normal Distribution -----------------------------------------------------
 #
@@ -136,5 +134,26 @@ server <- function(input, output) {
 #         stat_function(fun = df, args = list(df1 = df1, df2 = df2)) +
 #         lims(x = c(0, qf(0.999, df1, df2)))
 #     }
+  })
+
+  output$text <- renderUI({
+    test_type <- input$test
+    if (test_type == "One Sample Proportion") {
+      p <- input$p
+      n <- input$n
+      sigma <- sqrt(p * (1 - p) / n)
+      phat <- input$phat
+      alpha <- input$alpha
+      lb <- p - 4 * sigma
+      ub <- p + 4 * sigma
+      hypothesis_type <- input$hypot
+
+      withMathJax(
+        sprintf(
+          '\\(P\\left(\\hat{p}\\leq %.02f \\right) = %.04f\\)',
+          phat, pnorm(phat, p, sigma)
+        )
+      )
+    }
   })
 }
