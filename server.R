@@ -9,6 +9,7 @@ server <- function(input, output) {
 # One Sample Proportion ----------------------------------------------------
 
     if (test_type == "One Sample Proportion") {
+      # necessary set up
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -16,22 +17,71 @@ server <- function(input, output) {
       alpha <- input$alpha
       lb <- p - 4 * sigma
       ub <- p + 4 * sigma
-      ggplot() +
+      hypothesis_type <- input$hypot
+
+      # base plot
+      one_samp_prop <- ggplot() +
         stat_function(fun = dnorm, args = list(mean = p, sd = sigma)) +
-        lims(x = c(lb, ub)) +
-        stat_function(
-          fun = dnorm, args = list(mean = p, sd = sigma),
-          geom = "area", xlim = c(qnorm(1 - alpha, p, sigma), ub),
-          alpha = 0.75, fill = "brown"
-        ) +
         geom_point(aes(x = phat, y = 0.0125), shape = 6, size = 7) +
-        stat_function(
-          fun = dnorm, args = list(mean = p, sd = sigma),
-          geom = "area", xlim = c(phat, ub),
-          alpha = 0.5, fill = "grey"
-        ) +
+        lims(x = c(lb, ub)) +
         theme_minimal() +
         labs(x = "Sample Proporiton", y = "Probability")
+
+      if (hypothesis_type == '<=') {
+        # less than or equal to
+        one_samp_prop +
+          stat_function(
+            fun = dnorm, args = list(mean = p, sd = sigma),
+            geom = "area", xlim = c(lb, qnorm(alpha, p, sigma)),
+            alpha = 0.75, fill = "brown"
+          ) +
+          stat_function(
+            fun = dnorm, args = list(mean = p, sd = sigma),
+            geom = "area", xlim = c(lb, phat),
+            alpha = 0.5, fill = "grey"
+          )
+      } else if (hypothesis_type == '>=') {
+        # greater than or equal to
+        one_samp_prop +
+          stat_function(
+            fun = dnorm, args = list(mean = p, sd = sigma),
+            geom = "area", xlim = c(qnorm(1 - alpha, p, sigma), ub),
+            alpha = 0.75, fill = "brown"
+          ) +
+          stat_function(
+            fun = dnorm, args = list(mean = p, sd = sigma),
+            geom = "area", xlim = c(phat, ub),
+            alpha = 0.5, fill = "grey"
+          )
+      } else if (hypothesis_type == '!=') {
+        # not equal to
+        one_samp_prop +
+          stat_function(
+            fun = dnorm, args = list(mean = p, sd = sigma),
+            geom = "area", xlim = c(lb, qnorm(alpha / 2, p, sigma)),
+            alpha = 0.75, fill = "brown"
+          ) +
+          stat_function(
+            fun = dnorm, args = list(mean = p, sd = sigma),
+            geom = "area", xlim = c(qnorm(1 - alpha / 2, p, sigma), ub),
+            alpha = 0.75, fill = "brown"
+          ) + {
+            if (phat >= p) {
+              stat_function(
+                fun = dnorm, args = list(mean = p, sd = sigma),
+                geom = "area", xlim = c(phat, ub),
+                alpha = 0.5, fill = "grey"
+              )
+            } else {
+              stat_function(
+                fun = dnorm, args = list(mean = p, sd = sigma),
+                geom = "area", xlim = c(lb, phat),
+                alpha = 0.5, fill = "grey"
+              )
+            }
+          }
+      }
+
     }
 # # Normal Distribution -----------------------------------------------------
 #
