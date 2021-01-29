@@ -106,7 +106,14 @@ ui <- fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot")
+      plotOutput("distPlot"),
+      helpText('An irrational number \\(\\sqrt{2}\\)
+           and a fraction $$1-\\frac{1}{2}$$'),
+      helpText('and a fact about \\(\\pi\\):
+           $$\\frac2\\pi = \\frac{\\sqrt2}2 \\cdot
+           \\frac{\\sqrt{2+\\sqrt2}}2 \\cdot
+           \\frac{\\sqrt{2+\\sqrt{2+\\sqrt2}}}2 \\cdots$$'),
+      uiOutput('text')
     )
   )
 )
