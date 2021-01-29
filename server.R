@@ -6,10 +6,6 @@ server <- function(input, output) {
     test_type <- input$test
 
 
-# One Sample Proportion ---------------------------------------------------
-
-
-
 # One Sample Proportion ----------------------------------------------------
 
     if (test_type == "One Sample Proportion") {
@@ -34,7 +30,8 @@ server <- function(input, output) {
           geom = "area", xlim = c(phat, ub),
           alpha = 0.5, fill = "grey"
         ) +
-        theme_minimal()
+        theme_minimal() +
+        labs(x = "Sample Proporiton", y = "Probability")
     }
 # # Normal Distribution -----------------------------------------------------
 #
