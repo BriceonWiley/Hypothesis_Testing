@@ -19,7 +19,7 @@ server <- function(input, output) {
       alpha <- input$alpha
       lb <- p - 4 * sigma
       ub <- p + 4 * sigma
-      hypothesis_type <- input$hypot
+      hypothesis_type <- input$alternative
 
       # base plot
       one_samp_prop <- ggplot() +
@@ -27,10 +27,10 @@ server <- function(input, output) {
         geom_point(aes(x = phat, y = 0.25), shape = 6, size = 7) +
         geom_point(aes(x = p, y = -0.25), shape = 17, size = 7) +
         lims(x = c(lb, ub)) +
-        theme_minimal() +
+        theme_minimal(21) +
         labs(x = "Sample Proporiton", y = "Probability")
 
-      if (hypothesis_type == '<=') {
+      if (hypothesis_type == '≤') {
         # less than or equal to
         one_samp_prop +
           stat_function(
@@ -43,7 +43,7 @@ server <- function(input, output) {
             geom = "area", xlim = c(lb, phat),
             alpha = 0.5, fill = "grey"
           )
-      } else if (hypothesis_type == '>=') {
+      } else if (hypothesis_type == '≥') {
         # greater than or equal to
         one_samp_prop +
           stat_function(
@@ -56,7 +56,7 @@ server <- function(input, output) {
             geom = "area", xlim = c(phat, ub),
             alpha = 0.5, fill = "grey"
           )
-      } else if (hypothesis_type == '!=') {
+      } else if (hypothesis_type == '≠') {
         # not equal to
         one_samp_prop +
           stat_function(
@@ -143,24 +143,141 @@ server <- function(input, output) {
 
 # Results -----------------------------------------------------------------
 
-  output$text <- renderUI({
-    test_type <- input$test
-    if (test_type == "One Sample Proportion") {
-      p <- input$p
-      n <- input$n
-      sigma <- sqrt(p * (1 - p) / n)
-      phat <- input$phat
-      alpha <- input$alpha
-      lb <- p - 4 * sigma
-      ub <- p + 4 * sigma
-      hypothesis_type <- input$hypot
-
-      withMathJax(
-        sprintf(
-          '$$P\\left(\\hat{p}\\leq %.02f \\right) = %.04f$$',
-          phat, pnorm(phat, p, sigma)
-        )
+  output$distribution <- renderUI({
+    p <- input$p
+    n <- input$n
+    sigma <- sqrt(p * (1 - p) / n)
+    phat <- input$phat
+    withMathJax(
+      sprintf(
+        '$$\\hat{p}\\dot\\sim\\mathcal{N}\\left(%.02f,\\sqrt{\\frac{%0.2f*%0.2f}{%0.f}}=%.03f\\right)$$',
+        phat, p, p, n, sigma
       )
+    )
+  })
+
+  output$transform <- renderUI({
+    p <- input$p
+    n <- input$n
+    sigma <- sqrt(p * (1 - p) / n)
+    phat <- input$phat
+    z <- (phat - p) / sigma
+    withMathJax(
+      sprintf(
+        '$$Z=\\frac{%.02f-%0.2f}{%.03f}=%.02f$$',
+        phat, p, sigma, z
+      )
+    )
+  })
+
+  output$pvalue_stat <- renderUI({
+
+    test_type <- input$test
+    p <- input$p
+    n <- input$n
+    sigma <- sqrt(p * (1 - p) / n)
+    phat <- input$phat
+    alpha <- input$alpha
+    hypothesis_type <- input$alternative
+
+    if (test_type == "One Sample Proportion") {
+
+      if (hypothesis_type == '≤') {
+        # less than or equal to
+        pvalue <- pnorm(phat, p, sigma)
+        withMathJax(
+          sprintf(
+            '$$P\\left(\\hat{p}\\leq %.02f \\right) = %.04f$$',
+            phat, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '≥') {
+        # greater than or equal to
+        pvalue <- 1 - pnorm(phat, p, sigma)
+        withMathJax(
+          sprintf(
+            '$$P\\left(\\hat{p}\\geq %.02f \\right) = 1-P\\left(\\hat{p}< %.02f \\right) = %.04f$$',
+            phat, phat, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '≠') {
+        # not equal to
+        if (phat >= p) {
+          pvalue <- 2 * (1 - pnorm(phat, p, sigma))
+          withMathJax(
+            sprintf(
+              '$$P\\left(|\\hat{p}|\\geq %.02f \\right) = 2*\\left(1-P\\left(\\hat{p}\\leq %.02f \\right)\\right) = %.04f$$',
+              phat, phat, pvalue
+            )
+          )
+        } else {
+          pvalue <- 2 * (pnorm(phat, p, sigma))
+          withMathJax(
+            sprintf(
+              '$$P\\left(|\\hat{p}|\\leq %.02f \\right) = 2*P\\left(\\hat{p}\\leq %.02f \\right) = %.04f$$',
+              phat, phat, pvalue
+            )
+          )
+        }
+      }
+    }
+  })
+
+  output$pvalue_z <- renderUI({
+
+    test_type <- input$test
+    p <- input$p
+    n <- input$n
+    sigma <- sqrt(p * (1 - p) / n)
+    phat <- input$phat
+    alpha <- input$alpha
+    z <- (phat - p) / sigma
+    hypothesis_type <- input$alternative
+
+    if (test_type == "One Sample Proportion") {
+
+      if (hypothesis_type == '≤') {
+        # less than or equal to
+        pvalue <- pnorm(z)
+        withMathJax(
+          sprintf(
+            '$$P\\left(Z\\leq %.02f \\right) = %.04f$$',
+            z, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '≥') {
+        # greater than or equal to
+        pvalue <- 1 - pnorm(z)
+        withMathJax(
+          sprintf(
+            '$$P\\left(Z\\geq %.02f \\right) = 1-P\\left(Z< %.02f \\right) = %.04f$$',
+            z, z, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '≠') {
+        # not equal to
+        if (z >= 0) {
+          pvalue <- 2 * (1 - pnorm(z))
+          withMathJax(
+            sprintf(
+              '$$P\\left(|Z|\\geq %.02f \\right) = 2*\\left(1-P\\left(Z\\geq %.02f \\right)\\right) = %.04f$$',
+              z, z, pvalue
+            )
+          )
+        } else {
+          pvalue <- 2 * (pnorm(z))
+          withMathJax(
+            sprintf(
+              '$$P\\left(|Z|\\leq %.02f \\right) = 2*P\\left(Z\\leq %.02f \\right) = %.04f$$',
+              z, z, pvalue
+            )
+          )
+        }
+      }
     }
   })
 }
