@@ -41,8 +41,8 @@ ui <- fluidPage(
         ),
         fixedRow(
           radioButtons(
-            'hypot', 'Type of Hypothesis:',
-            choices = c("<=", ">=", "!="),
+            'alternative', 'Alternative Hypothesis:',
+            choices = c("≤", "≥", "≠"),
             inline = TRUE
           )
         ),
@@ -110,7 +110,16 @@ ui <- fluidPage(
       #      $$\\frac2\\pi = \\frac{\\sqrt2}2 \\cdot
       #      \\frac{\\sqrt{2+\\sqrt2}}2 \\cdot
       #      \\frac{\\sqrt{2+\\sqrt{2+\\sqrt2}}}2 \\cdots$$'),
-      uiOutput('text')
+      fixedRow(
+        column(6,
+          uiOutput('distribution'),
+          uiOutput('transform')
+        ),
+        column(6,
+          uiOutput('pvalue_stat'),
+          uiOutput('pvalue_z')
+        )
+      )
     )
   )
 )
