@@ -2,10 +2,14 @@
 
 server <- function(input, output) {
 
+
+# Plots -------------------------------------------------------------------
+
   output$distPlot <- renderPlot({
     test_type <- input$test
-# One Sample Proportion - Plot --------------------------------------------
 
+
+# One Sample Proportion ---------------------------------------------------
     if (test_type == "One Sample Proportion") {
       # necessary set up
       p <- input$p
@@ -136,6 +140,9 @@ server <- function(input, output) {
 #     }
   })
 
+
+# Results -----------------------------------------------------------------
+
   output$text <- renderUI({
     test_type <- input$test
     if (test_type == "One Sample Proportion") {
@@ -150,7 +157,7 @@ server <- function(input, output) {
 
       withMathJax(
         sprintf(
-          '\\(P\\left(\\hat{p}\\leq %.02f \\right) = %.04f\\)',
+          '$$P\\left(\\hat{p}\\leq %.02f \\right) = %.04f$$',
           phat, pnorm(phat, p, sigma)
         )
       )
