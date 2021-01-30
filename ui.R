@@ -40,23 +40,20 @@ ui <- fluidPage(
           # ),
         ),
         fixedRow(
-          column(6,
-            selectInput(
-              "hypot", "Type of Hypothesis:",
-              choices = c("<=", ">=", "!=")
-            )
-          ),
-          column(6,
-            numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
-          ),
+          radioButtons(
+            'hypot', 'Type of Hypothesis:',
+            choices = c("<=", ">=", "!="),
+            inline = TRUE
+          )
         ),
         fixedRow(
-          column(6,
-            numericInput("phat", "Sample Proportion", value = 0.5, min = 0, max = 1, step = 0.01)
-          ),
-          column(6,
-            numericInput("n", "Sample Size", value = 50)
-          )
+          numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
+        ),
+        fixedRow(
+          numericInput("phat", "Sample Proportion", value = 0.5, min = 0, max = 1, step = 0.01)
+        ),
+        fixedRow(
+          numericInput("n", "Sample Size", value = 50)
         )
       ),
       # conditionalPanel(
@@ -107,12 +104,12 @@ ui <- fluidPage(
     # Show a plot of the generated distribution
     mainPanel(
       plotOutput("distPlot"),
-      helpText('An irrational number \\(\\sqrt{2}\\)
-           and a fraction $$1-\\frac{1}{2}$$'),
-      helpText('and a fact about \\(\\pi\\):
-           $$\\frac2\\pi = \\frac{\\sqrt2}2 \\cdot
-           \\frac{\\sqrt{2+\\sqrt2}}2 \\cdot
-           \\frac{\\sqrt{2+\\sqrt{2+\\sqrt2}}}2 \\cdots$$'),
+      # helpText('An irrational number \\(\\sqrt{2}\\)
+      #      and a fraction $$1-\\frac{1}{2}$$'),
+      # helpText('and a fact about \\(\\pi\\):
+      #      $$\\frac2\\pi = \\frac{\\sqrt2}2 \\cdot
+      #      \\frac{\\sqrt{2+\\sqrt2}}2 \\cdot
+      #      \\frac{\\sqrt{2+\\sqrt{2+\\sqrt2}}}2 \\cdots$$'),
       uiOutput('text')
     )
   )
