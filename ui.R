@@ -54,7 +54,7 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.test == 'One Sample Mean'",
         fixedRow(
-          numericInput("mu", "Hypothesized Mean", value = 0, step = 0.5)
+          numericInput("mu", "Hypothesized Mean", value = 0)
         ),
         fixedRow(
           radioButtons(
@@ -74,10 +74,10 @@ ui <- fluidPage(
           numericInput("alpha_mu", "α", value = 0.05, min = 0, max = 1, step = 0.01)
         ),
         fixedRow(
-          numericInput("xbar", "Sample Mean", value = 0, step = 0.5)
+          numericInput("xbar", "Sample Mean", value = 0)
         ),
         fixedRow(
-          numericInput("sig", "Standard Deviation", value = 1, min = 0, step = 0.5)
+          numericInput("sig", "Standard Deviation", value = 1, min = 0)
         ),
         fixedRow(
           numericInput("n_mu", "Sample Size", value = 25)
