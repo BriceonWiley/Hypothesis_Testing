@@ -89,21 +89,21 @@ server <- function(input, output) {
       # necessary set up
       mu <- input$mu
       n <- input$n
-      stderr <- input$sig / sqrt(n)
+      std <- input$sig / sqrt(n)
       xbar <- input$xbar
       alpha <- input$alpha
-      lb <- mu - 4 * stderr
-      ub <- mu + 4 * stderr
-      z <- (xbar - mu) / stderr
+      lb <- mu - 4 * std
+      ub <- mu + 4 * std
+      z <- (xbar - mu) / std
       df <- n - 1
       hypothesis_type <- input$alternative
 
       if (input$pop_std) {
         # base plot
         one_samp_mean <- ggplot() +
-          stat_function(fun = dnorm, args = list(mean = mu, sd = stderr)) +
-          geom_point(aes(x = xbar, y = 0.0425 * dnorm(mu, mu, stderr)), shape = 6, size = 7) +
-          geom_point(aes(x = mu, y = -0.0425 * dnorm(mu, mu, stderr)), shape = 17, size = 7) +
+          stat_function(fun = dnorm, args = list(mean = mu, sd = std)) +
+          geom_point(aes(x = xbar, y = 0.0425 * dnorm(mu, mu, std)), shape = 6, size = 7) +
+          geom_point(aes(x = mu, y = -0.0425 * dnorm(mu, mu, std)), shape = 17, size = 7) +
           lims(x = c(lb, ub)) +
           theme_minimal(21) +
           labs(x = "Sample Mean", y = "Probability")
@@ -112,12 +112,12 @@ server <- function(input, output) {
           # less than or equal to
           one_samp_mean +
             stat_function(
-              fun = dnorm, args = list(mean = mu, sd = stderr),
-              geom = "area", xlim = c(lb, qnorm(alpha, mu, stderr)),
+              fun = dnorm, args = list(mean = mu, sd = std),
+              geom = "area", xlim = c(lb, qnorm(alpha, mu, std)),
               alpha = 0.75, fill = "#A47551"
             ) +
             stat_function(
-              fun = dnorm, args = list(mean = mu, sd = stderr),
+              fun = dnorm, args = list(mean = mu, sd = std),
               geom = "area", xlim = c(lb, xbar),
               alpha = 0.5, fill = "grey"
             )
@@ -125,12 +125,12 @@ server <- function(input, output) {
           # greater than or equal to
           one_samp_mean +
             stat_function(
-              fun = dnorm, args = list(mean = mu, sd = stderr),
-              geom = "area", xlim = c(qnorm(1 - alpha, mu, stderr), ub),
+              fun = dnorm, args = list(mean = mu, sd = std),
+              geom = "area", xlim = c(qnorm(1 - alpha, mu, std), ub),
               alpha = 0.75, fill = "#A47551"
             ) +
             stat_function(
-              fun = dnorm, args = list(mean = mu, sd = stderr),
+              fun = dnorm, args = list(mean = mu, sd = std),
               geom = "area", xlim = c(xbar, ub),
               alpha = 0.5, fill = "grey"
             )
@@ -138,24 +138,24 @@ server <- function(input, output) {
           # not equal to
           one_samp_mean +
             stat_function(
-              fun = dnorm, args = list(mean = mu, sd = stderr),
-              geom = "area", xlim = c(lb, qnorm(alpha / 2, mu, stderr)),
+              fun = dnorm, args = list(mean = mu, sd = std),
+              geom = "area", xlim = c(lb, qnorm(alpha / 2, mu, std)),
               alpha = 0.75, fill = "#A47551"
             ) +
             stat_function(
-              fun = dnorm, args = list(mean = mu, sd = stderr),
-              geom = "area", xlim = c(qnorm(1 - alpha / 2, mu, stderr), ub),
+              fun = dnorm, args = list(mean = mu, sd = std),
+              geom = "area", xlim = c(qnorm(1 - alpha / 2, mu, std), ub),
               alpha = 0.75, fill = "#A47551"
             ) + {
               if (xbar >= mu) {
                 stat_function(
-                  fun = dnorm, args = list(mean = mu, sd = stderr),
+                  fun = dnorm, args = list(mean = mu, sd = std),
                   geom = "area", xlim = c(xbar, ub),
                   alpha = 0.5, fill = "grey"
                 )
               } else {
                 stat_function(
-                  fun = dnorm, args = list(mean = mu, sd = stderr),
+                  fun = dnorm, args = list(mean = mu, sd = std),
                   geom = "area", xlim = c(lb, xbar),
                   alpha = 0.5, fill = "grey"
                 )
@@ -287,34 +287,88 @@ server <- function(input, output) {
 # Results -----------------------------------------------------------------
 
   output$distribution <- renderUI({
-    p <- input$p
-    n <- input$n
-    sigma <- sqrt(p * (1 - p) / n)
-    phat <- input$phat
-    withMathJax(
-      sprintf(
-        '$$\\hat{p}\\dot\\sim\\mathcal{N}\\left(%.02f,\\sqrt{\\frac{%0.2f*%0.2f}{%0.f}}=%.03f\\right)$$',
-        phat, p, p, n, sigma
+    test_type <- input$test
+
+    if (test_type == 'One Sample Proportion') {
+      p <- input$p
+      n <- input$n
+      sigma <- sqrt(p * (1 - p) / n)
+      phat <- input$phat
+      withMathJax(
+        sprintf(
+          '$$\\hat{p}\\dot\\sim\\mathcal{N}\\left(%.02f,\\sqrt{\\frac{%0.2f*%0.2f}{%0.f}}=%.03f\\right)$$',
+          phat, p, p, n, sigma
+        )
       )
-    )
+    } else if (test_type == 'One Sample Mean') {
+      mu <- input$mu
+      n <- input$n
+      sigma <- input$sig
+      std <- input$sig / sqrt(n)
+      xbar <- input$xbar
+      z <- (xbar - mu) / std
+      df <- n - 1
+      if (input$pop_std) {
+        withMathJax(
+          sprintf(
+            '$$\\bar{x}\\dot\\sim\\mathcal{N}\\left(%.02f,\\frac{%0.2f}{\\sqrt{%0.f}}=%.03f\\right)$$',
+            mu, sigma, n, std
+          )
+        )
+      } else {
+        withMathJax(
+          sprintf(
+            '$$T=\\frac{\\bar{x}-\\mu}{s/\\sqrt{n}}\\sim t_{%0.f}$$',
+            # '$$\\bar{x}\\dot\\sim\\mathcal{N}\\left(%.02f,\\frac{%0.2f}{\\sqrt{%0.f}}=%.03f\\right)$$',
+            df
+          )
+        )
+      }
+    }
   })
 
   output$transform <- renderUI({
-    p <- input$p
-    n <- input$n
-    sigma <- sqrt(p * (1 - p) / n)
-    phat <- input$phat
-    z <- (phat - p) / sigma
-    withMathJax(
-      sprintf(
-        '$$Z=\\frac{%.02f-%0.2f}{%.03f}=%.02f$$',
-        phat, p, sigma, z
+    test_type <- input$test
+
+    if (test_type == 'One Sample Proportion') {
+      p <- input$p
+      n <- input$n
+      sigma <- sqrt(p * (1 - p) / n)
+      phat <- input$phat
+      z <- (phat - p) / sigma
+      withMathJax(
+        sprintf(
+          '$$Z=\\frac{%.02f-%0.2f}{%.03f}=%.02f$$',
+          phat, p, sigma, z
+        )
       )
-    )
+    } else if (test_type == 'One Sample Mean') {
+      mu <- input$mu
+      n <- input$n
+      sigma <- input$sig
+      std <- input$sig / sqrt(n)
+      xbar <- input$xbar
+      z <- (xbar - mu) / std
+      df <- n - 1
+      if (input$pop_std) {
+        withMathJax(
+          sprintf(
+            '$$Z=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
+            xbar, mu, sigma, n, z
+          )
+        )
+      } else {
+        withMathJax(
+          sprintf(
+            '$$T=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
+            xbar, mu, sigma, n, z
+          )
+        )
+      }
+    }
   })
 
   output$pvalue_stat <- renderUI({
-
     test_type <- input$test
     p <- input$p
     n <- input$n
