@@ -319,7 +319,6 @@ server <- function(input, output) {
         withMathJax(
           sprintf(
             '$$T=\\frac{\\bar{x}-\\mu}{s/\\sqrt{n}}\\sim t_{%0.f}$$',
-            # '$$\\bar{x}\\dot\\sim\\mathcal{N}\\left(%.02f,\\frac{%0.2f}{\\sqrt{%0.f}}=%.03f\\right)$$',
             df
           )
         )
@@ -370,14 +369,14 @@ server <- function(input, output) {
 
   output$pvalue_stat <- renderUI({
     test_type <- input$test
-    p <- input$p
-    n <- input$n
-    sigma <- sqrt(p * (1 - p) / n)
-    phat <- input$phat
     alpha <- input$alpha
     hypothesis_type <- input$alternative
 
     if (test_type == "One Sample Proportion") {
+      p <- input$p
+      n <- input$n
+      sigma <- sqrt(p * (1 - p) / n)
+      phat <- input$phat
 
       if (hypothesis_type == '≤') {
         # less than or equal to
@@ -417,6 +416,98 @@ server <- function(input, output) {
               phat, phat, pvalue
             )
           )
+        }
+      }
+    } else if (test_type == 'One Sample Mean') {
+      mu <- input$mu
+      n <- input$n
+      sigma <- input$sig
+      std <- input$sig / sqrt(n)
+      xbar <- input$xbar
+      z <- (xbar - mu) / std
+      df <- n - 1
+
+      if (input$pop_std) {
+        if (hypothesis_type == '≤') {
+          # less than or equal to
+          pvalue <- pnorm(xbar, mu, std)
+          withMathJax(
+            sprintf(
+              '$$P\\left(\\bar{x}\\leq %.02f \\right) = %.04f$$',
+              xbar, pvalue
+            )
+          )
+
+        } else if (hypothesis_type == '≥') {
+          # greater than or equal to
+          pvalue <- 1 - pnorm(xbar, mu, std)
+          withMathJax(
+            sprintf(
+              '$$P\\left(\\bar{x}\\geq %.02f \\right) = 1-P\\left(\\bar{x}< %.02f \\right) = %.04f$$',
+              xbar, xbar, pvalue
+            )
+          )
+
+        } else if (hypothesis_type == '≠') {
+          # not equal to
+          if (xbar >= mu) {
+            pvalue <- 2 * (1 - pnorm(xbar, mu, std))
+            withMathJax(
+              sprintf(
+                '$$P\\left(|\\bar{x}|\\geq %.02f \\right) = 2*\\left(1-P\\left(\\bar{x}\\leq %.02f \\right)\\right) = %.04f$$',
+                xbar, xbar, pvalue
+              )
+            )
+          } else {
+            pvalue <- 2 * (pnorm(xbar, mu, std))
+            withMathJax(
+              sprintf(
+                '$$P\\left(|\\bar{x}|\\leq %.02f \\right) = 2*P\\left(\\bar{x}\\leq %.02f \\right) = %.04f$$',
+                xbar, xbar, pvalue
+              )
+            )
+          }
+        }
+      } else {
+        if (hypothesis_type == '≤') {
+          # less than or equal to
+          pvalue <- pt(z, df)
+          withMathJax(
+            sprintf(
+              '$$P\\left(\\bar{x}\\leq %.02f \\right) = %.04f$$',
+              xbar, pvalue
+            )
+          )
+
+        } else if (hypothesis_type == '≥') {
+          # greater than or equal to
+          pvalue <- 1 - pt(z, df)
+          withMathJax(
+            sprintf(
+              '$$P\\left(\\bar{x}\\geq %.02f \\right) = 1-P\\left(\\bar{x}< %.02f \\right) = %.04f$$',
+              xbar, xbar, pvalue
+            )
+          )
+
+        } else if (hypothesis_type == '≠') {
+          # not equal to
+          if (xbar >= mu) {
+            pvalue <- 2 * (1 - pt(z, df))
+            withMathJax(
+              sprintf(
+                '$$P\\left(|\\bar{x}|\\geq %.02f \\right) = 2*\\left(1-P\\left(\\bar{x}\\leq %.02f \\right)\\right) = %.04f$$',
+                xbar, xbar, pvalue
+              )
+            )
+          } else {
+            pvalue <- 2 * pt(z, df)
+            withMathJax(
+              sprintf(
+                '$$P\\left(|\\bar{x}|\\leq %.02f \\right) = 2*P\\left(\\bar{x}\\leq %.02f \\right) = %.04f$$',
+                xbar, xbar, pvalue
+              )
+            )
+          }
         }
       }
     }
