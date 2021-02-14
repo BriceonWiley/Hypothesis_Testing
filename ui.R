@@ -96,7 +96,7 @@ ui <- fluidPage(
           ),
         )
       ),
-      width = 2
+      width = 3
     ),
 
 
