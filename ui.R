@@ -15,38 +15,56 @@ ui <- fluidPage(
 
   sidebarLayout(
     sidebarPanel(
-      selectInput(
-        "test", "Type of Test:",
-        choices = c(
-          "One Sample Proportion",
-          "One Sample Mean",
-          "Two Samples Mean"
-        ), selected = 'One Sample Mean'
+      fixedRow(
+        column(
+          width = 8,
+          selectInput(
+            "test", "Type of Test:",
+            choices = c(
+              "One Sample Proportion",
+              "One Sample Mean",
+              "Two Samples Mean"
+            ), selected = 'One Sample Mean'
+          )
+        ),
+        column(
+          width = 4,
+          numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
+        )
+      ),
+      fixedRow(
+        column(
+          width = 6,
+          radioButtons(
+            'alternative', 'Alternative Hypothesis:',
+            choices = c("≤", "≥", "≠"),
+            inline = TRUE
+          )
+        ),
+        column(
+          width = 6,
+          numericInput("n", "Sample Size", value = 25)
+        )
       ),
 
 # One Sample Proportion ---------------------------------------------------
       conditionalPanel(
         condition = "input.test == 'One Sample Proportion'",
         fixedRow(
-          sliderInput("p", "Hypothesized Proportion:",
-            min = 0, max = 1,
-            value = 0.5, step = 0.01)
-        ),
-        fixedRow(
-          radioButtons(
-            'alternative_p', 'Alternative Hypothesis:',
-            choices = c("≤", "≥", "≠"),
-            inline = TRUE
+          column(
+            width = 6,
+            numericInput(
+              "p", "Null Proportion:",
+              value = 0.5, min = 0, max = 1, step = 0.01
+            )
+          ),
+          column(
+            width = 6,
+            numericInput(
+              "phat", "Sample Proportion",
+              value = 0.5, min = 0, max = 1, step = 0.01
+            )
           )
-        ),
-        fixedRow(
-          numericInput("alpha_p", "α", value = 0.05, min = 0, max = 1, step = 0.01)
-        ),
-        fixedRow(
-          numericInput("phat", "Sample Proportion", value = 0.5, min = 0, max = 1, step = 0.01)
-        ),
-        fixedRow(
-          numericInput("n_p", "Sample Size", value = 50)
         )
       ),
 
@@ -56,27 +74,11 @@ ui <- fluidPage(
         fixedRow(
           column(
             width = 6,
-            numericInput("mu", "Hypothesized Mean", value = 0)
+            numericInput("mu", "Null Mean", value = 0)
           ),
-          column(
-            width = 6,
-            radioButtons(
-              'alternative_mu', 'Alternative Hypothesis:',
-              choices = c("≤", "≥", "≠"), inline = TRUE
-            )
-          )
-        ),
-        fixedRow(
-          numericInput("alpha_mu", "α", value = 0.05, min = 0, max = 1, step = 0.01)
-        ),
-        fixedRow(
           column(
             width = 6,
             numericInput("xbar", "Sample Mean", value = 0)
-          ),
-          column(
-            width = 6,
-            numericInput("n_mu", "Sample Size", value = 25)
           )
         ),
         fixedRow(
