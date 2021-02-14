@@ -9,8 +9,8 @@ server <- function(input, output) {
     test_type <- input$test
 
 
-# One Sample Proportion ---------------------------------------------------
     if (test_type == "One Sample Proportion") {
+# One Sample Proportion ---------------------------------------------------
       # necessary set up
       p <- input$p
       n <- input$n
@@ -36,7 +36,7 @@ server <- function(input, output) {
           stat_function(
             fun = dnorm, args = list(mean = p, sd = sigma),
             geom = "area", xlim = c(lb, qnorm(alpha, p, sigma)),
-            alpha = 0.75, fill = "brown"
+            alpha = 0.75, fill = "#A47551"
           ) +
           stat_function(
             fun = dnorm, args = list(mean = p, sd = sigma),
@@ -49,7 +49,7 @@ server <- function(input, output) {
           stat_function(
             fun = dnorm, args = list(mean = p, sd = sigma),
             geom = "area", xlim = c(qnorm(1 - alpha, p, sigma), ub),
-            alpha = 0.75, fill = "brown"
+            alpha = 0.75, fill = "#A47551"
           ) +
           stat_function(
             fun = dnorm, args = list(mean = p, sd = sigma),
@@ -62,12 +62,12 @@ server <- function(input, output) {
           stat_function(
             fun = dnorm, args = list(mean = p, sd = sigma),
             geom = "area", xlim = c(lb, qnorm(alpha / 2, p, sigma)),
-            alpha = 0.75, fill = "brown"
+            alpha = 0.75, fill = "#A47551"
           ) +
           stat_function(
             fun = dnorm, args = list(mean = p, sd = sigma),
             geom = "area", xlim = c(qnorm(1 - alpha / 2, p, sigma), ub),
-            alpha = 0.75, fill = "brown"
+            alpha = 0.75, fill = "#A47551"
           ) + {
             if (phat >= p) {
               stat_function(
@@ -84,6 +84,9 @@ server <- function(input, output) {
             }
           }
       }
+    } else if (test_type == 'One Sample Mean') {
+# One Sample Mean ---------------------------------------------------------
+
     }
 # # Normal Distribution -----------------------------------------------------
 #
