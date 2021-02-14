@@ -80,7 +80,7 @@ ui <- fluidPage(
           numericInput("sig", "Standard Deviation", value = 1, min = 0, step = 0.5)
         ),
         fixedRow(
-          numericInput("n_mu", "Sample Size", value = 50)
+          numericInput("n_mu", "Sample Size", value = 25)
         )
       ),
       width = 3
