@@ -24,6 +24,7 @@ ui <- fluidPage(
         ), selected = 'One Sample Mean'
       ),
 
+# One Sample Proportion ---------------------------------------------------
       conditionalPanel(
         condition = "input.test == 'One Sample Proportion'",
         fixedRow(
@@ -33,22 +34,23 @@ ui <- fluidPage(
         ),
         fixedRow(
           radioButtons(
-            'alternative', 'Alternative Hypothesis:',
+            'alternative_p', 'Alternative Hypothesis:',
             choices = c("≤", "≥", "≠"),
             inline = TRUE
           )
         ),
         fixedRow(
-          numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
+          numericInput("alpha_p", "α", value = 0.05, min = 0, max = 1, step = 0.01)
         ),
         fixedRow(
           numericInput("phat", "Sample Proportion", value = 0.5, min = 0, max = 1, step = 0.01)
         ),
         fixedRow(
-          numericInput("n", "Sample Size", value = 50)
+          numericInput("n_p", "Sample Size", value = 50)
         )
       ),
 
+# One Sample Mean ---------------------------------------------------------
       conditionalPanel(
         condition = "input.test == 'One Sample Mean'",
         fixedRow(
@@ -56,29 +58,29 @@ ui <- fluidPage(
         ),
         fixedRow(
           radioButtons(
-            'alternative', 'Alternative Hypothesis:',
+            'alternative_mu', 'Alternative Hypothesis:',
             choices = c("≤", "≥", "≠"),
             inline = TRUE
           )
         ),
         fixedRow(
           switchInput(
-            inputId = 'var', label = 'Standard Deviation', value = TRUE,
+            inputId = 'pop_std', label = 'Standard Deviation', value = TRUE,
             onLabel = 'Population', offLabel = 'Sample', onStatus = 'success',
             offStatus = 'danger', inline = TRUE
           )
         ),
         fixedRow(
-          numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
+          numericInput("alpha_mu", "α", value = 0.05, min = 0, max = 1, step = 0.01)
         ),
         fixedRow(
           numericInput("xbar", "Sample Mean", value = 0, step = 0.5)
         ),
         fixedRow(
-          numericInput("sig", "Standard Deviation", value = 0, step = 0.5)
+          numericInput("sig", "Standard Deviation", value = 1, min = 0, step = 0.5)
         ),
         fixedRow(
-          numericInput("n", "Sample Size", value = 50)
+          numericInput("n_mu", "Sample Size", value = 50)
         )
       ),
       width = 3
