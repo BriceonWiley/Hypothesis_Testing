@@ -54,36 +54,47 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.test == 'One Sample Mean'",
         fixedRow(
-          numericInput("mu", "Hypothesized Mean", value = 0)
-        ),
-        fixedRow(
-          radioButtons(
-            'alternative_mu', 'Alternative Hypothesis:',
-            choices = c("≤", "≥", "≠"),
-            inline = TRUE
-          )
-        ),
-        fixedRow(
-          switchInput(
-            inputId = 'pop_std', label = 'Standard Deviation', value = TRUE,
-            onLabel = 'Population', offLabel = 'Sample', onStatus = 'success',
-            offStatus = 'danger', inline = TRUE
+          column(
+            width = 6,
+            numericInput("mu", "Hypothesized Mean", value = 0)
+          ),
+          column(
+            width = 6,
+            radioButtons(
+              'alternative_mu', 'Alternative Hypothesis:',
+              choices = c("≤", "≥", "≠"), inline = TRUE
+            )
           )
         ),
         fixedRow(
           numericInput("alpha_mu", "α", value = 0.05, min = 0, max = 1, step = 0.01)
         ),
         fixedRow(
-          numericInput("xbar", "Sample Mean", value = 0)
+          column(
+            width = 6,
+            numericInput("xbar", "Sample Mean", value = 0)
+          ),
+          column(
+            width = 6,
+            numericInput("n_mu", "Sample Size", value = 25)
+          )
         ),
         fixedRow(
-          numericInput("sig", "Standard Deviation", value = 1, min = 0)
-        ),
-        fixedRow(
-          numericInput("n_mu", "Sample Size", value = 25)
+          column(
+            width = 6,
+            switchInput(
+              inputId = 'pop_std', label = 'Standard Deviation', value = TRUE,
+              onLabel = 'Population', offLabel = 'Sample', onStatus = 'success',
+              offStatus = 'danger', inline = TRUE
+            )
+          ),
+          column(
+            width = 6,
+            numericInput("sig", 'Standard Deviation', value = 1, min = 0)
+          ),
         )
       ),
-      width = 3
+      width = 2
     ),
 
 
