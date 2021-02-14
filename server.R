@@ -13,13 +13,13 @@ server <- function(input, output) {
 # One Sample Proportion ---------------------------------------------------
       # necessary set up
       p <- input$p
-      n <- input$n
+      n <- input$n_p
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
-      alpha <- input$alpha
+      alpha <- input$alpha_p
       lb <- p - 4 * sigma
       ub <- p + 4 * sigma
-      hypothesis_type <- input$alternative
+      hypothesis_type <- input$alternative_p
 
       # base plot
       one_samp_prop <- ggplot() +
@@ -86,7 +86,81 @@ server <- function(input, output) {
       }
     } else if (test_type == 'One Sample Mean') {
 # One Sample Mean ---------------------------------------------------------
+      # necessary set up
+      mu <- input$mu
+      n <- input$n_mu
+      stderr <- input$sig / sqrt(n)
+      xbar <- input$xbar
+      alpha <- input$alpha_mu
+      lb <- mu - 4 * stderr
+      ub <- mu + 4 * stderr
+      hypothesis_type <- input$alternative_mu
 
+      if (input$pop_std) {
+        # base plot
+        one_samp_mean <- ggplot() +
+          stat_function(fun = dnorm, args = list(mean = mu, sd = stderr)) +
+          geom_point(aes(x = xbar, y = 0.25), shape = 6, size = 7) +
+          geom_point(aes(x = mu, y = -0.25), shape = 17, size = 7) +
+          lims(x = c(lb, ub)) +
+          theme_minimal(21) +
+          labs(x = "Sample Mean", y = "Probability")
+
+        if (hypothesis_type == '≤') {
+          # less than or equal to
+          one_samp_mean +
+            stat_function(
+              fun = dnorm, args = list(mean = mu, sd = stderr),
+              geom = "area", xlim = c(lb, qnorm(alpha, mu, stderr)),
+              alpha = 0.75, fill = "#A47551"
+            ) +
+            stat_function(
+              fun = dnorm, args = list(mean = mu, sd = stderr),
+              geom = "area", xlim = c(lb, xbar),
+              alpha = 0.5, fill = "grey"
+            )
+        } else if (hypothesis_type == '≥') {
+          # greater than or equal to
+          one_samp_mean +
+            stat_function(
+              fun = dnorm, args = list(mean = mu, sd = stderr),
+              geom = "area", xlim = c(qnorm(1 - alpha, mu, stderr), ub),
+              alpha = 0.75, fill = "#A47551"
+            ) +
+            stat_function(
+              fun = dnorm, args = list(mean = mu, sd = stderr),
+              geom = "area", xlim = c(xbar, ub),
+              alpha = 0.5, fill = "grey"
+            )
+        } else if (hypothesis_type == '≠') {
+          # not equal to
+          one_samp_mean +
+            stat_function(
+              fun = dnorm, args = list(mean = mu, sd = stderr),
+              geom = "area", xlim = c(lb, qnorm(alpha / 2, mu, stderr)),
+              alpha = 0.75, fill = "#A47551"
+            ) +
+            stat_function(
+              fun = dnorm, args = list(mean = mu, sd = stderr),
+              geom = "area", xlim = c(qnorm(1 - alpha / 2, mu, stderr), ub),
+              alpha = 0.75, fill = "#A47551"
+            ) + {
+              if (xbar >= mu) {
+                stat_function(
+                  fun = dnorm, args = list(mean = mu, sd = stderr),
+                  geom = "area", xlim = c(xbar, ub),
+                  alpha = 0.5, fill = "grey"
+                )
+              } else {
+                stat_function(
+                  fun = dnorm, args = list(mean = mu, sd = stderr),
+                  geom = "area", xlim = c(lb, xbar),
+                  alpha = 0.5, fill = "grey"
+                )
+              }
+            }
+        }
+      }
     }
 # # Normal Distribution -----------------------------------------------------
 #
