@@ -24,8 +24,8 @@ server <- function(input, output) {
       # base plot
       one_samp_prop <- ggplot() +
         stat_function(fun = dnorm, args = list(mean = p, sd = sigma)) +
-        geom_point(aes(x = phat, y = 0.25), shape = 6, size = 7) +
-        geom_point(aes(x = p, y = -0.25), shape = 17, size = 7) +
+        geom_point(aes(x = phat, y = 0.0425 * dnorm(p, p, sigma)), shape = 6, size = 7) +
+        geom_point(aes(x = p, y = -0.0425 * dnorm(p, p, sigma)), shape = 17, size = 7) +
         lims(x = c(lb, ub)) +
         theme_minimal(21) +
         labs(x = "Sample Proporiton", y = "Probability")
@@ -100,8 +100,8 @@ server <- function(input, output) {
         # base plot
         one_samp_mean <- ggplot() +
           stat_function(fun = dnorm, args = list(mean = mu, sd = stderr)) +
-          geom_point(aes(x = xbar, y = 0.25), shape = 6, size = 7) +
-          geom_point(aes(x = mu, y = -0.25), shape = 17, size = 7) +
+          geom_point(aes(x = xbar, y = 0.0425 * dnorm(mu, mu, stderr)), shape = 6, size = 7) +
+          geom_point(aes(x = mu, y = -0.0425 * dnorm(mu, mu, stderr)), shape = 17, size = 7) +
           lims(x = c(lb, ub)) +
           theme_minimal(21) +
           labs(x = "Sample Mean", y = "Probability")
