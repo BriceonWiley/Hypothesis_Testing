@@ -13,13 +13,13 @@ server <- function(input, output) {
 # One Sample Proportion ---------------------------------------------------
       # necessary set up
       p <- input$p
-      n <- input$n_p
+      n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
-      alpha <- input$alpha_p
+      alpha <- input$alpha
       lb <- p - 4 * sigma
       ub <- p + 4 * sigma
-      hypothesis_type <- input$alternative_p
+      hypothesis_type <- input$alternative
 
       # base plot
       one_samp_prop <- ggplot() +
@@ -88,13 +88,13 @@ server <- function(input, output) {
 # One Sample Mean ---------------------------------------------------------
       # necessary set up
       mu <- input$mu
-      n <- input$n_mu
+      n <- input$n
       stderr <- input$sig / sqrt(n)
       xbar <- input$xbar
-      alpha <- input$alpha_mu
+      alpha <- input$alpha
       lb <- mu - 4 * stderr
       ub <- mu + 4 * stderr
-      hypothesis_type <- input$alternative_mu
+      hypothesis_type <- input$alternative
 
       if (input$pop_std) {
         # base plot
