@@ -94,6 +94,8 @@ server <- function(input, output) {
       alpha <- input$alpha
       lb <- mu - 4 * stderr
       ub <- mu + 4 * stderr
+      z <- (xbar - mu) / stderr
+      df <- n - 1
       hypothesis_type <- input$alternative
 
       if (input$pop_std) {
@@ -155,6 +157,70 @@ server <- function(input, output) {
                 stat_function(
                   fun = dnorm, args = list(mean = mu, sd = stderr),
                   geom = "area", xlim = c(lb, xbar),
+                  alpha = 0.5, fill = "grey"
+                )
+              }
+            }
+        }
+      } else {
+        # base plot
+        one_samp_mean <- ggplot() +
+          stat_function(fun = dt, args = list(df = df)) +
+          geom_point(aes(x = z, y = 0.0425 * dt(0, df)), shape = 6, size = 7) +
+          geom_point(aes(x = 0, y = -0.0425 * dt(0, df)), shape = 17, size = 7) +
+          lims(x = c(-3.5, 3.5)) +
+          theme_minimal(21) +
+          labs(x = "Sample Mean", y = "Probability")
+
+        if (hypothesis_type == '≤') {
+          # less than or equal to
+          one_samp_mean +
+            stat_function(
+              fun = dt, args = list(df = df),
+              geom = "area", xlim = c(-3.5, qt(alpha, df)),
+              alpha = 0.75, fill = "#A47551"
+            ) +
+            stat_function(
+              fun = dt, args = list(df = df),
+              geom = "area", xlim = c(-3.5, z),
+              alpha = 0.5, fill = "grey"
+            )
+        } else if (hypothesis_type == '≥') {
+          # greater than or equal to
+          one_samp_mean +
+            stat_function(
+              fun = dt, args = list(df = df),
+              geom = "area", xlim = c(qt(1 - alpha, df), 3.5),
+              alpha = 0.75, fill = "#A47551"
+            ) +
+            stat_function(
+              fun = dt, args = list(df = df),
+              geom = "area", xlim = c(z, 3.5),
+              alpha = 0.5, fill = "grey"
+            )
+        } else if (hypothesis_type == '≠') {
+          # not equal to
+          one_samp_mean +
+            stat_function(
+              fun = dt, args = list(df = df),
+              geom = "area", xlim = c(-3.5, qt(alpha / 2, df)),
+              alpha = 0.75, fill = "#A47551"
+            ) +
+            stat_function(
+              fun = dt, args = list(df = df),
+              geom = "area", xlim = c(qt(1 - alpha / 2, df), 3.5),
+              alpha = 0.75, fill = "#A47551"
+            ) + {
+              if (xbar >= mu) {
+                stat_function(
+                  fun = dt, args = list(df = df),
+                  geom = "area", xlim = c(z, 3.5),
+                  alpha = 0.5, fill = "grey"
+                )
+              } else {
+                stat_function(
+                  fun = dt, args = list(df = df),
+                  geom = "area", xlim = c(-3.5, z),
                   alpha = 0.5, fill = "grey"
                 )
               }
