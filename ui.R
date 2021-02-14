@@ -22,23 +22,14 @@ ui <- fluidPage(
           "One Sample Mean",
           "Two Samples Mean"
         ), selected = 'One Sample Mean'
-        # width = "50%"
       ),
-      # selectInput(
-      #   "test", "Type of Distribution:",
-      #   choices = c("Normal", "t", "Chi Square", "F"),
-      #   # width = "50%"
-      # ),
 
       conditionalPanel(
         condition = "input.test == 'One Sample Proportion'",
         fixedRow(
           sliderInput("p", "Hypothesized Proportion:",
             min = 0, max = 1,
-            value = 0.5, step = 0.01),
-          # column(6,
-          #   numericInput("p", "Hypothesized Proportion", value = 0.5)
-          # ),
+            value = 0.5, step = 0.01)
         ),
         fixedRow(
           radioButtons(
@@ -57,17 +48,6 @@ ui <- fluidPage(
           numericInput("n", "Sample Size", value = 50)
         )
       ),
-      # conditionalPanel(
-      #   condition = "input.test == 'Normal'",
-      #   fixedRow(
-      #     column(6,
-      #       numericInput("xbar", "Sample Mean", value = 0)
-      #     ),
-      #     column(6,
-      #       numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
-      #     )
-      #   )
-      # ),
 
       conditionalPanel(
         condition = "input.test == 'One Sample Mean'",
@@ -99,25 +79,6 @@ ui <- fluidPage(
         ),
         fixedRow(
           numericInput("n", "Sample Size", value = 50)
-        )
-      ),
-      conditionalPanel(
-        condition = "input.test == 'Chi Square'",
-        fixedRow(
-          column(6,
-            numericInput("dfc", "DF", value = 1, min = 1)
-          )
-        )
-      ),
-      conditionalPanel(
-        condition = "input.test == 'F'",
-        fixedRow(
-          column(6,
-            numericInput("df1", "DF1", value = 1, min = 1)
-          ),
-          column(6,
-            numericInput("df2", "DF2", value = 1, min = 1)
-          )
         )
       ),
       width = 3
