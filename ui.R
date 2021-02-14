@@ -2,6 +2,7 @@
 
 library(shiny)
 library(ggplot2)
+library(shinyWidgets)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -20,7 +21,7 @@ ui <- fluidPage(
           "One Sample Proportion",
           "One Sample Mean",
           "Two Samples Mean"
-        ),
+        ), selected = 'One Sample Mean'
         # width = "50%"
       ),
       # selectInput(
@@ -69,11 +70,35 @@ ui <- fluidPage(
       # ),
 
       conditionalPanel(
-        condition = "input.test == 't'",
+        condition = "input.test == 'One Sample Mean'",
         fixedRow(
-          column(6,
-            numericInput("dft", "DF", value = 1, min = 1)
+          numericInput("mu", "Hypothesized Mean", value = 0, step = 0.5)
+        ),
+        fixedRow(
+          radioButtons(
+            'alternative', 'Alternative Hypothesis:',
+            choices = c("≤", "≥", "≠"),
+            inline = TRUE
           )
+        ),
+        fixedRow(
+          switchInput(
+            inputId = 'var', label = 'Standard Deviation', value = TRUE,
+            onLabel = 'Population', offLabel = 'Sample', onStatus = 'success',
+            offStatus = 'danger', inline = TRUE
+          )
+        ),
+        fixedRow(
+          numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
+        ),
+        fixedRow(
+          numericInput("xbar", "Sample Mean", value = 0, step = 0.5)
+        ),
+        fixedRow(
+          numericInput("sig", "Standard Deviation", value = 0, step = 0.5)
+        ),
+        fixedRow(
+          numericInput("n", "Sample Size", value = 50)
         )
       ),
       conditionalPanel(
