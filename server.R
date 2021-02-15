@@ -30,7 +30,7 @@ server <- function(input, output) {
         theme_minimal(21) +
         labs(x = "Sample Proporiton", y = "Probability")
 
-      if (hypothesis_type == '≤') {
+      if (hypothesis_type == '<') {
         # less than or equal to
         one_samp_prop +
           stat_function(
@@ -43,7 +43,7 @@ server <- function(input, output) {
             geom = "area", xlim = c(lb, phat),
             alpha = 0.5, fill = "grey"
           )
-      } else if (hypothesis_type == '≥') {
+      } else if (hypothesis_type == '>') {
         # greater than or equal to
         one_samp_prop +
           stat_function(
@@ -108,7 +108,7 @@ server <- function(input, output) {
           theme_minimal(21) +
           labs(x = "Sample Mean", y = "Probability")
 
-        if (hypothesis_type == '≤') {
+        if (hypothesis_type == '<') {
           # less than or equal to
           one_samp_mean +
             stat_function(
@@ -121,7 +121,7 @@ server <- function(input, output) {
               geom = "area", xlim = c(lb, xbar),
               alpha = 0.5, fill = "grey"
             )
-        } else if (hypothesis_type == '≥') {
+        } else if (hypothesis_type == '>') {
           # greater than or equal to
           one_samp_mean +
             stat_function(
@@ -172,7 +172,7 @@ server <- function(input, output) {
           theme_minimal(21) +
           labs(x = "Sample Mean", y = "Probability")
 
-        if (hypothesis_type == '≤') {
+        if (hypothesis_type == '<') {
           # less than or equal to
           one_samp_mean +
             stat_function(
@@ -185,7 +185,7 @@ server <- function(input, output) {
               geom = "area", xlim = c(-4, z),
               alpha = 0.5, fill = "grey"
             )
-        } else if (hypothesis_type == '≥') {
+        } else if (hypothesis_type == '>') {
           # greater than or equal to
           one_samp_mean +
             stat_function(
@@ -378,7 +378,7 @@ server <- function(input, output) {
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
 
-      if (hypothesis_type == '≤') {
+      if (hypothesis_type == '<') {
         # less than or equal to
         pvalue <- pnorm(phat, p, sigma)
         withMathJax(
@@ -388,7 +388,7 @@ server <- function(input, output) {
           )
         )
 
-      } else if (hypothesis_type == '≥') {
+      } else if (hypothesis_type == '>') {
         # greater than or equal to
         pvalue <- 1 - pnorm(phat, p, sigma)
         withMathJax(
@@ -428,7 +428,7 @@ server <- function(input, output) {
       df <- n - 1
 
       if (input$pop_std) {
-        if (hypothesis_type == '≤') {
+        if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pnorm(xbar, mu, std)
           withMathJax(
@@ -438,7 +438,7 @@ server <- function(input, output) {
             )
           )
 
-        } else if (hypothesis_type == '≥') {
+        } else if (hypothesis_type == '>') {
           # greater than or equal to
           pvalue <- 1 - pnorm(xbar, mu, std)
           withMathJax(
@@ -469,7 +469,7 @@ server <- function(input, output) {
           }
         }
       } else {
-        if (hypothesis_type == '≤') {
+        if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pt(z, df)
           withMathJax(
@@ -479,7 +479,7 @@ server <- function(input, output) {
             )
           )
 
-        } else if (hypothesis_type == '≥') {
+        } else if (hypothesis_type == '>') {
           # greater than or equal to
           pvalue <- 1 - pt(z, df)
           withMathJax(
@@ -525,7 +525,7 @@ server <- function(input, output) {
       phat <- input$phat
       z <- (phat - p) / sigma
 
-      if (hypothesis_type == '≤') {
+      if (hypothesis_type == '<') {
         # less than or equal to
         pvalue <- pnorm(z)
         withMathJax(
@@ -535,7 +535,7 @@ server <- function(input, output) {
           )
         )
 
-      } else if (hypothesis_type == '≥') {
+      } else if (hypothesis_type == '>') {
         # greater than or equal to
         pvalue <- 1 - pnorm(z)
         withMathJax(
@@ -575,7 +575,7 @@ server <- function(input, output) {
       df <- n - 1
 
       if (input$pop_std) {
-        if (hypothesis_type == '≤') {
+        if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pnorm(z)
           withMathJax(
@@ -585,7 +585,7 @@ server <- function(input, output) {
             )
           )
 
-        } else if (hypothesis_type == '≥') {
+        } else if (hypothesis_type == '>') {
           # greater than or equal to
           pvalue <- 1 - pnorm(z)
           withMathJax(
@@ -616,7 +616,7 @@ server <- function(input, output) {
           }
         }
       } else {
-        if (hypothesis_type == '≤') {
+        if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pt(z, df)
           withMathJax(
@@ -626,7 +626,7 @@ server <- function(input, output) {
             )
           )
 
-        } else if (hypothesis_type == '≥') {
+        } else if (hypothesis_type == '>') {
           # greater than or equal to
           pvalue <- 1 - pt(z, df)
           withMathJax(
