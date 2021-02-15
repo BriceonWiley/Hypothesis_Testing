@@ -37,7 +37,7 @@ ui <- fluidPage(
           width = 6,
           radioButtons(
             'alternative', 'Alternative Hypothesis:',
-            choices = c("≤", "≥", "≠"),
+            choices = c("<", ">", "≠"),
             inline = TRUE
           )
         ),
