@@ -297,7 +297,7 @@ server <- function(input, output) {
       withMathJax(
         sprintf(
           '$$\\hat{p}\\dot\\sim\\mathcal{N}\\left(%.02f,\\sqrt{\\frac{%0.2f*%0.2f}{%0.f}}=%.03f\\right)$$',
-          phat, p, p, n, sigma
+          p, p, 1 - p, n, sigma
         )
       )
     } else if (test_type == 'One Sample Mean') {
