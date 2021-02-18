@@ -96,6 +96,8 @@ ui <- fluidPage(
           ),
         )
       ),
+      actionButton("update" ,"Update View", icon("refresh"),
+        class = "btn btn-primary"),
       width = 3
     ),
 
