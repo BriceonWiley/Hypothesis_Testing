@@ -15,7 +15,7 @@ ui <- fluidPage(
 
   sidebarLayout(
     sidebarPanel(
-      fixedRow(
+      fluidRow(
         column(
           width = 8,
           selectInput(
@@ -32,7 +32,7 @@ ui <- fluidPage(
           numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
         )
       ),
-      fixedRow(
+      fluidRow(
         column(
           width = 6,
           radioButtons(
@@ -50,7 +50,7 @@ ui <- fluidPage(
 # One Sample Proportion ---------------------------------------------------
       conditionalPanel(
         condition = "input.test == 'One Sample Proportion'",
-        fixedRow(
+        fluidRow(
           column(
             width = 6,
             numericInput(
@@ -71,7 +71,7 @@ ui <- fluidPage(
 # One Sample Mean ---------------------------------------------------------
       conditionalPanel(
         condition = "input.test == 'One Sample Mean'",
-        fixedRow(
+        fluidRow(
           column(
             width = 6,
             numericInput("mu", "Null Mean", value = 0)
@@ -81,7 +81,7 @@ ui <- fluidPage(
             numericInput("xbar", "Sample Mean", value = 0)
           )
         ),
-        fixedRow(
+        fluidRow(
           column(
             width = 6,
             switchInput(
@@ -89,6 +89,11 @@ ui <- fluidPage(
               onLabel = 'Population', offLabel = 'Sample', onStatus = 'success',
               offStatus = 'danger', inline = TRUE
             )
+            # checkboxInput("pop_std", label = "Population Standard Deviation?", value = TRUE)
+            # selectInput(
+            #   'pop_std', 'Standard Deviation Type',
+            #   c('Population', 'Sample'), 'Population'
+            # )
           ),
           column(
             width = 6,
@@ -96,14 +101,11 @@ ui <- fluidPage(
           ),
         )
       ),
-      fixedRow(
-        column(
-          width = 12, offset = 8,
+      fluidRow(
           actionButton(
             "update" ,"Update", icon("refresh"),
             class = "btn btn-primary"
           )
-        )
       ),
       width = 3
     ),
@@ -120,7 +122,7 @@ ui <- fluidPage(
       #      $$\\frac2\\pi = \\frac{\\sqrt2}2 \\cdot
       #      \\frac{\\sqrt{2+\\sqrt2}}2 \\cdot
       #      \\frac{\\sqrt{2+\\sqrt{2+\\sqrt2}}}2 \\cdots$$'),
-      fixedRow(
+      fluidRow(
         column(6,
           uiOutput('distribution'),
           uiOutput('transform')
