@@ -96,8 +96,15 @@ ui <- fluidPage(
           ),
         )
       ),
-      actionButton("update" ,"Update View", icon("refresh"),
-        class = "btn btn-primary"),
+      fixedRow(
+        column(
+          width = 12, offset = 8,
+          actionButton(
+            "update" ,"Update", icon("refresh"),
+            class = "btn btn-primary"
+          )
+        )
+      ),
       width = 3
     ),
 
@@ -122,7 +129,7 @@ ui <- fluidPage(
           uiOutput('pvalue_stat'),
           uiOutput('pvalue_z')
         )
-      )
+      ), width = 9
     )
   )
 )

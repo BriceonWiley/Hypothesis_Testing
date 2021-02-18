@@ -3,14 +3,13 @@
 server <- function(input, output) {
 
 
-# Plots -------------------------------------------------------------------
+# Make Plots --------------------------------------------------------------
 
-  output$distPlot <- renderPlot({
+  update_plot <- eventReactive(input$update, {
     test_type <- input$test
 
-
     if (test_type == "One Sample Proportion") {
-# One Sample Proportion ---------------------------------------------------
+      # One Sample Proportion ---------------------------------------------
       # necessary set up
       p <- input$p
       n <- input$n
@@ -42,7 +41,7 @@ server <- function(input, output) {
             fun = dnorm, args = list(mean = p, sd = sigma),
             geom = "area", xlim = c(lb, phat),
             alpha = 0.5, fill = "grey"
-          )
+          ) -> one_samp_prop
       } else if (hypothesis_type == '>') {
         # greater than or equal to
         one_samp_prop +
@@ -55,7 +54,7 @@ server <- function(input, output) {
             fun = dnorm, args = list(mean = p, sd = sigma),
             geom = "area", xlim = c(phat, ub),
             alpha = 0.5, fill = "grey"
-          )
+          ) -> one_samp_prop
       } else if (hypothesis_type == '≠') {
         # not equal to
         one_samp_prop +
@@ -82,10 +81,11 @@ server <- function(input, output) {
                 alpha = 0.5, fill = "grey"
               )
             }
-          }
+          } -> one_samp_prop
       }
+      one_samp_prop
     } else if (test_type == 'One Sample Mean') {
-# One Sample Mean ---------------------------------------------------------
+      # One Sample Mean ---------------------------------------------------
       # necessary set up
       mu <- input$mu
       n <- input$n
@@ -120,7 +120,7 @@ server <- function(input, output) {
               fun = dnorm, args = list(mean = mu, sd = std),
               geom = "area", xlim = c(lb, xbar),
               alpha = 0.5, fill = "grey"
-            )
+            ) -> one_samp_mean
         } else if (hypothesis_type == '>') {
           # greater than or equal to
           one_samp_mean +
@@ -133,7 +133,7 @@ server <- function(input, output) {
               fun = dnorm, args = list(mean = mu, sd = std),
               geom = "area", xlim = c(xbar, ub),
               alpha = 0.5, fill = "grey"
-            )
+            ) -> one_samp_mean
         } else if (hypothesis_type == '≠') {
           # not equal to
           one_samp_mean +
@@ -160,7 +160,7 @@ server <- function(input, output) {
                   alpha = 0.5, fill = "grey"
                 )
               }
-            }
+            } -> one_samp_mean
         }
       } else {
         # base plot
@@ -184,7 +184,7 @@ server <- function(input, output) {
               fun = dt, args = list(df = df),
               geom = "area", xlim = c(-4, z),
               alpha = 0.5, fill = "grey"
-            )
+            ) -> one_samp_mean
         } else if (hypothesis_type == '>') {
           # greater than or equal to
           one_samp_mean +
@@ -197,7 +197,7 @@ server <- function(input, output) {
               fun = dt, args = list(df = df),
               geom = "area", xlim = c(z, 4),
               alpha = 0.5, fill = "grey"
-            )
+            ) -> one_samp_mean
         } else if (hypothesis_type == '≠') {
           # not equal to
           one_samp_mean +
@@ -224,69 +224,16 @@ server <- function(input, output) {
                   alpha = 0.5, fill = "grey"
                 )
               }
-            }
+            } -> one_samp_mean
         }
       }
+      one_samp_mean
     }
-# # Normal Distribution -----------------------------------------------------
-#
-#     if (plot_type == "Normal") {
-#       mu <- input$mu
-#       sigma <- input$sig
-#       xbar <- input$xbar
-#       alpha <- input$alpha
-#       lb <- mu - 4 * sigma
-#       ub <- mu + 4 * sigma
-#       ggplot() +
-#         stat_function(fun = dnorm, args = list(mean = mu, sd = sigma)) +
-#         lims(x = c(lb, ub)) +
-#         stat_function(
-#           fun = dnorm, args = list(mean = mu, sd = sigma),
-#           geom = "area", xlim = c(qnorm(1 - alpha, mu, sigma), ub),
-#           alpha = 0.75, fill = "brown"
-#         ) +
-#         geom_point(aes(x = xbar, y = 0.0125), shape = 6, size = 7) +
-#         stat_function(
-#           fun = dnorm, args = list(mean = mu, sd = sigma),
-#           geom = "area", xlim = c(xbar, ub),
-#           alpha = 0.5, fill = "grey"
-#         )
-#
-#
-# # t Distribution ----------------------------------------------------------
-#
-#     } else if (plot_type == "t") {
-#       df <- as.numeric(input$dft)
-#       ggplot() +
-#         stat_function(fun = dt, args = list(df = df)) +
-#         lims(x = c(-4, 4))
-#
-#
-# # Chi Square Distribution -------------------------------------------------
-#
-#     } else if (plot_type == "Chi Square") {
-#       df <- as.numeric(input$dfc)
-#       ggplot() +
-#         stat_function(fun = dchisq, args = list(df = df)) +
-#         lims(x = c(0, qchisq(1 - .Machine$double.eps, df)))
-#
-#
-# # F Distribution ----------------------------------------------------------
-#
-#     } else if (plot_type == "F") {
-#       df1 <- as.numeric(input$df1)
-#       df2 <- as.numeric(input$df2)
-#
-#       ggplot() +
-#         stat_function(fun = df, args = list(df1 = df1, df2 = df2)) +
-#         lims(x = c(0, qf(0.999, df1, df2)))
-#     }
   })
 
+# Make Results ------------------------------------------------------------
 
-# Results -----------------------------------------------------------------
-
-  output$distribution <- renderUI({
+  update_distribution <- eventReactive(input$update, {
     test_type <- input$test
 
     if (test_type == 'One Sample Proportion') {
@@ -326,7 +273,7 @@ server <- function(input, output) {
     }
   })
 
-  output$transform <- renderUI({
+  update_transformation <- eventReactive(input$update, {
     test_type <- input$test
 
     if (test_type == 'One Sample Proportion') {
@@ -367,7 +314,7 @@ server <- function(input, output) {
     }
   })
 
-  output$pvalue_stat <- renderUI({
+  update_pvalue_stat <- eventReactive(input$update, {
     test_type <- input$test
     alpha <- input$alpha
     hypothesis_type <- input$alternative
@@ -513,7 +460,7 @@ server <- function(input, output) {
     }
   })
 
-  output$pvalue_z <- renderUI({
+  update_pvalue_z <- eventReactive(input$update, {
     test_type <- input$test
     alpha <- input$alpha
     hypothesis_type <- input$alternative
@@ -658,5 +605,30 @@ server <- function(input, output) {
         }
       }
     }
+  })
+
+# Display Plots -----------------------------------------------------------
+
+  output$distPlot <- renderPlot({
+    update_plot()
+  })
+
+
+# Results -----------------------------------------------------------------
+
+  output$distribution <- renderUI({
+    update_distribution()
+  })
+
+  output$transform <- renderUI({
+    update_transformation()
+  })
+
+  output$pvalue_stat <- renderUI({
+    update_pvalue_stat()
+  })
+
+  output$pvalue_z <- renderUI({
+    update_pvalue_z()
   })
 }
