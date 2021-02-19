@@ -102,7 +102,7 @@ ui <- fluidPage(
           ),
         align = 'center'
       ),
-      width = 3
+      # width = 3
     ),
 
 
@@ -126,7 +126,7 @@ ui <- fluidPage(
             )
           )
         )
-      ), width = 9
+      ), #width = 9
     )
   )
 )
