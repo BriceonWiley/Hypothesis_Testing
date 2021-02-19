@@ -81,26 +81,20 @@ ui <- fluidPage(
             numericInput("xbar", "Sample Mean", value = 0)
           )
         ),
+        h5('Standard Deviation:'),
         fluidRow(
           column(
             width = 6,
-            switchInput(
-              inputId = 'pop_std', label = 'Standard Deviation', value = TRUE,
-              onLabel = 'Population', offLabel = 'Sample', onStatus = 'success',
-              offStatus = 'danger', inline = TRUE
-            )
-            # checkboxInput("pop_std", label = "Population Standard Deviation?", value = TRUE)
-            # selectInput(
-            #   'pop_std', 'Standard Deviation Type',
-            #   c('Population', 'Sample'), 'Population'
-            # )
+            numericInput("sig",label = NULL, value = 1, min = 0)
           ),
           column(
             width = 6,
-            numericInput("sig", 'Standard Deviation', value = 1, min = 0)
-          ),
-        )
-      ),
+            selectInput(
+              'std_src', NULL, c('Population', 'Sample'), 'Population'
+              )
+            ),
+          )
+        ),
       fluidRow(
           actionButton(
             "update" ,"Update", icon("refresh"),
@@ -115,21 +109,21 @@ ui <- fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot"),
-      # helpText('An irrational number \\(\\sqrt{2}\\)
-      #      and a fraction $$1-\\frac{1}{2}$$'),
-      # helpText('and a fact about \\(\\pi\\):
-      #      $$\\frac2\\pi = \\frac{\\sqrt2}2 \\cdot
-      #      \\frac{\\sqrt{2+\\sqrt2}}2 \\cdot
-      #      \\frac{\\sqrt{2+\\sqrt{2+\\sqrt2}}}2 \\cdots$$'),
-      fluidRow(
-        column(6,
-          uiOutput('distribution'),
-          uiOutput('transform')
-        ),
-        column(6,
-          uiOutput('pvalue_stat'),
-          uiOutput('pvalue_z')
+      tabsetPanel(
+        type = 'tabs', # 'pills'
+        tabPanel('Plot', plotOutput("distPlot")),
+        tabPanel(
+          title = 'Results',
+          fluidRow(
+            column(6,
+              uiOutput('distribution'),
+              uiOutput('transform')
+            ),
+            column(6,
+              uiOutput('pvalue_stat'),
+              uiOutput('pvalue_z')
+            )
+          )
         )
       ), width = 9
     )
