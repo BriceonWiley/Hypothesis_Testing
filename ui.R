@@ -91,15 +91,16 @@ ui <- fluidPage(
             width = 6,
             selectInput(
               'std_src', NULL, c('Population', 'Sample'), 'Population'
-              )
             ),
-          )
+          ),
+        )
         ),
       fluidRow(
           actionButton(
             "update" ,"Update", icon("refresh"),
             class = "btn btn-primary"
-          )
+          ),
+        align = 'center'
       ),
       width = 3
     ),
