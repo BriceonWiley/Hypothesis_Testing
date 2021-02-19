@@ -98,7 +98,7 @@ server <- function(input, output) {
       df <- n - 1
       hypothesis_type <- input$alternative
 
-      if (input$pop_std) {
+      if (input$std_src == 'Population') {
         # base plot
         one_samp_mean <- ggplot() +
           stat_function(fun = dnorm, args = list(mean = mu, sd = std)) +
@@ -162,7 +162,7 @@ server <- function(input, output) {
               }
             } -> one_samp_mean
         }
-      } else {
+      } else if (input$std_src == 'Sample') {
         # base plot
         one_samp_mean <- ggplot() +
           stat_function(fun = dt, args = list(df = df)) +
@@ -255,14 +255,14 @@ server <- function(input, output) {
       xbar <- input$xbar
       z <- (xbar - mu) / std
       df <- n - 1
-      if (input$pop_std) {
+      if (input$std_src == 'Population') {
         withMathJax(
           sprintf(
             '$$\\bar{x}\\dot\\sim\\mathcal{N}\\left(%.02f,\\frac{%0.2f}{\\sqrt{%0.f}}=%.03f\\right)$$',
             mu, sigma, n, std
           )
         )
-      } else {
+      } else if (input$std_src == 'Sample') {
         withMathJax(
           sprintf(
             '$$T=\\frac{\\bar{x}-\\mu}{s/\\sqrt{n}}\\sim t_{%0.f}$$',
@@ -296,14 +296,14 @@ server <- function(input, output) {
       xbar <- input$xbar
       z <- (xbar - mu) / std
       df <- n - 1
-      if (input$pop_std) {
+      if (input$std_src == 'Population') {
         withMathJax(
           sprintf(
             '$$Z=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
             xbar, mu, sigma, n, z
           )
         )
-      } else {
+      } else if (input$std_src == 'Sample') {
         withMathJax(
           sprintf(
             '$$T=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
@@ -374,7 +374,7 @@ server <- function(input, output) {
       z <- (xbar - mu) / std
       df <- n - 1
 
-      if (input$pop_std) {
+      if (input$std_src == 'Population') {
         if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pnorm(xbar, mu, std)
@@ -415,7 +415,7 @@ server <- function(input, output) {
             )
           }
         }
-      } else {
+      } else if (input$std_src == 'Sample') {
         if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pt(z, df)
@@ -521,7 +521,7 @@ server <- function(input, output) {
       z <- (xbar - mu) / std
       df <- n - 1
 
-      if (input$pop_std) {
+      if (input$std_src == 'Population') {
         if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pnorm(z)
@@ -562,7 +562,7 @@ server <- function(input, output) {
             )
           }
         }
-      } else {
+      } else if (input$std_src == 'Sample') {
         if (hypothesis_type == '<') {
           # less than or equal to
           pvalue <- pt(z, df)
