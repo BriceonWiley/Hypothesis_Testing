@@ -228,6 +228,87 @@ server <- function(input, output) {
         }
       }
       one_samp_mean
+    } else if (test_type == 'Dependent Samples') {
+      # Dependent Mean ----------------------------------------------------
+      D0 <- input$D0
+      n <- input$n
+      std <- input$sigd / sqrt(n)
+      dbar <- input$dbar
+      alpha <- input$alpha
+      lb <- D0 - 4 * std
+      ub <- D0 + 4 * std
+      t <- (dbar - D0) / std
+      df <- n - 1
+      hypothesis_type <- input$alternative
+
+      # base plot
+      dependent_samples <- ggplot() +
+        stat_function(fun = dt, args = list(df = df)) +
+        geom_point(aes(x = t, y = 0.0425 * dt(0, df)), shape = 6, size = 7) +
+        geom_point(aes(x = 0, y = -0.0425 * dt(0, df)), shape = 17, size = 7) +
+        lims(x = c(-4, 4)) +
+        theme_minimal(21) +
+        labs(x = "Sample Mean", y = "Probability")
+
+      if (hypothesis_type == '<') {
+        # less than or equal to
+        dependent_samples +
+          stat_function(
+            fun = dt, args = list(df = df),
+            geom = "area", xlim = c(-4, qt(alpha, df)),
+            alpha = 0.75, fill = "#A47551"
+          ) +
+          stat_function(
+            fun = dt, args = list(df = df),
+            geom = "area", xlim = c(-4, t),
+            alpha = 0.5, fill = "grey"
+          ) -> dependent_samples
+      } else if (hypothesis_type == '>') {
+        # greater than or equal to
+        dependent_samples +
+          stat_function(
+            fun = dt, args = list(df = df),
+            geom = "area", xlim = c(qt(1 - alpha, df), 4),
+            alpha = 0.75, fill = "#A47551"
+          ) +
+          stat_function(
+            fun = dt, args = list(df = df),
+            geom = "area", xlim = c(t, 4),
+            alpha = 0.5, fill = "grey"
+          ) -> dependent_samples
+      } else if (hypothesis_type == '≠') {
+        # not equal to
+        dependent_samples +
+          stat_function(
+            fun = dt, args = list(df = df),
+            geom = "area", xlim = c(-4, qt(alpha / 2, df)),
+            alpha = 0.75, fill = "#A47551"
+          ) +
+          stat_function(
+            fun = dt, args = list(df = df),
+            geom = "area", xlim = c(qt(1 - alpha / 2, df), 4),
+            alpha = 0.75, fill = "#A47551"
+          ) + {
+            if (dbar >= D0) {
+              stat_function(
+                fun = dt, args = list(df = df),
+                geom = "area", xlim = c(t, 4),
+                alpha = 0.5, fill = "grey"
+              )
+            } else {
+              stat_function(
+                fun = dt, args = list(df = df),
+                geom = "area", xlim = c(-4, t),
+                alpha = 0.5, fill = "grey"
+              )
+            }
+          } -> dependent_samples
+      }
+      dependent_samples
+    } else if (test_type == 'Independent Samples') {
+
+    } else if (test_type == 'Two Proportions') {
+
     }
   })
 
@@ -237,6 +318,7 @@ server <- function(input, output) {
     test_type <- input$test
 
     if (test_type == 'One Proportion') {
+      # One Sample Proportion ---------------------------------------------
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -248,12 +330,12 @@ server <- function(input, output) {
         )
       )
     } else if (test_type == 'One Mean') {
+      # One Sample Mean ---------------------------------------------------
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
       std <- input$sig / sqrt(n)
       xbar <- input$xbar
-      z <- (xbar - mu) / std
       df <- n - 1
       if (input$std_src == 'Population') {
         withMathJax(
@@ -270,6 +352,20 @@ server <- function(input, output) {
           )
         )
       }
+    } else if (test_type == 'Dependent Samples') {
+      # Dependent Mean ----------------------------------------------------
+      n <- input$n
+      df <- n - 1
+      withMathJax(
+        sprintf(
+          '$$T=\\frac{\\bar{d}-D_0}{s_d/\\sqrt{n}}\\sim t_{%0.f}$$',
+          df
+        )
+      )
+    } else if (test_type == 'Independent Samples') {
+      # Independent Mean --------------------------------------------------
+    } else if (test_type == 'Two Proportions') {
+
     }
   })
 
@@ -277,6 +373,7 @@ server <- function(input, output) {
     test_type <- input$test
 
     if (test_type == 'One Proportion') {
+      # One Sample Proportion ---------------------------------------------
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -289,6 +386,7 @@ server <- function(input, output) {
         )
       )
     } else if (test_type == 'One Mean') {
+      # One Sample Mean ---------------------------------------------------
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
@@ -311,6 +409,25 @@ server <- function(input, output) {
           )
         )
       }
+    } else if (test_type == 'Dependent Samples') {
+      # Dependent Mean ----------------------------------------------------
+      D0 <- input$D0
+      n <- input$n
+      sigma <- input$sigd
+      std <- input$sigd / sqrt(n)
+      dbar <- input$dbar
+      t <- (dbar - D0) / std
+      df <- n - 1
+      withMathJax(
+        sprintf(
+          '$$T=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
+          dbar, D0, sigma, n, t
+        )
+      )
+    } else if (test_type == 'Independent Samples') {
+      # Independent Mean --------------------------------------------------
+    } else if (test_type == 'Two Proportions') {
+
     }
   })
 
@@ -373,7 +490,6 @@ server <- function(input, output) {
       xbar <- input$xbar
       z <- (xbar - mu) / std
       df <- n - 1
-
       if (input$std_src == 'Population') {
         if (hypothesis_type == '<') {
           # less than or equal to
@@ -457,6 +573,59 @@ server <- function(input, output) {
           }
         }
       }
+    } else if (test_type == 'Dependent Samples') {
+      D0 <- input$D0
+      n <- input$n
+      sigma <- input$sigd
+      std <- input$sigd / sqrt(n)
+      dbar <- input$dbar
+      t <- (dbar - D0) / std
+      df <- n - 1
+
+      if (hypothesis_type == '<') {
+        # less than or equal to
+        pvalue <- pt(t, df)
+        withMathJax(
+          sprintf(
+            '$$P\\left(\\bar{d}\\leq %.02f \\right) = %.04f$$',
+            dbar, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '>') {
+        # greater than or equal to
+        pvalue <- 1 - pt(t, df)
+        withMathJax(
+          sprintf(
+            '$$P\\left(\\bar{d}\\geq %.02f \\right) = 1-P\\left(\\bar{d}< %.02f \\right) = %.04f$$',
+            dbar, dbar, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '≠') {
+        # not equal to
+        if (dbar >= D0) {
+          pvalue <- 2 * (1 - pt(t, df))
+          withMathJax(
+            sprintf(
+              '$$P\\left(|\\bar{d}|\\geq %.02f \\right) = 2*\\left(1-P\\left(\\bar{d}\\leq %.02f \\right)\\right) = %.04f$$',
+              dbar, dbar, pvalue
+            )
+          )
+        } else {
+          pvalue <- 2 * pt(t, df)
+          withMathJax(
+            sprintf(
+              '$$P\\left(|\\bar{d}|\\leq %.02f \\right) = 2*P\\left(\\bar{d}\\leq %.02f \\right) = %.04f$$',
+              dbar, dbar, pvalue
+            )
+          )
+        }
+      }
+    } else if (test_type == 'Independent Samples') {
+
+    } else if (test_type == 'Two Proportions') {
+
     }
   })
 
