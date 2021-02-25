@@ -26,7 +26,7 @@ ui <- fluidPage(
               "Dependent Samples",
               "Independent Samples",
               "Two Proportions"
-            ), selected = 'Dependent Mean'
+            ), selected = 'Dependent Samples'
           )
         ),
         column(
@@ -102,7 +102,7 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.test == 'Dependent Samples'",
         fluidRow(
-          column()
+          # column()
         )
       ),
 
