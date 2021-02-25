@@ -21,10 +21,12 @@ ui <- fluidPage(
           selectInput(
             "test", "Type of Test:",
             choices = c(
-              "One Sample Proportion",
-              "One Sample Mean",
-              "Two Samples Mean"
-            ), selected = 'One Sample Mean'
+              "One Proportion",
+              "One Mean",
+              "Dependent Samples",
+              "Independent Samples",
+              "Two Proportions"
+            ), selected = 'Dependent Mean'
           )
         ),
         column(
@@ -94,7 +96,16 @@ ui <- fluidPage(
             ),
           ),
         )
-        ),
+      ),
+
+# Two Samples Mean --------------------------------------------------------
+      conditionalPanel(
+        condition = "input.test == 'Two Samples Mean'",
+        fluidRow(
+          column()
+        )
+      ),
+
       fluidRow(
           actionButton(
             "update" ,"Update", icon("refresh"),
