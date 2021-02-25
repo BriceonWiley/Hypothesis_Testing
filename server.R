@@ -8,7 +8,7 @@ server <- function(input, output) {
   update_plot <- eventReactive(input$update, {
     test_type <- input$test
 
-    if (test_type == "One Sample Proportion") {
+    if (test_type == "One Proportion") {
       # One Sample Proportion ---------------------------------------------
       # necessary set up
       p <- input$p
@@ -84,7 +84,7 @@ server <- function(input, output) {
           } -> one_samp_prop
       }
       one_samp_prop
-    } else if (test_type == 'One Sample Mean') {
+    } else if (test_type == 'One Mean') {
       # One Sample Mean ---------------------------------------------------
       # necessary set up
       mu <- input$mu
@@ -236,7 +236,7 @@ server <- function(input, output) {
   update_distribution <- eventReactive(input$update, {
     test_type <- input$test
 
-    if (test_type == 'One Sample Proportion') {
+    if (test_type == 'One Proportion') {
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -247,7 +247,7 @@ server <- function(input, output) {
           p, p, 1 - p, n, sigma
         )
       )
-    } else if (test_type == 'One Sample Mean') {
+    } else if (test_type == 'One Mean') {
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
@@ -276,7 +276,7 @@ server <- function(input, output) {
   update_transformation <- eventReactive(input$update, {
     test_type <- input$test
 
-    if (test_type == 'One Sample Proportion') {
+    if (test_type == 'One Proportion') {
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -288,7 +288,7 @@ server <- function(input, output) {
           phat, p, sigma, z
         )
       )
-    } else if (test_type == 'One Sample Mean') {
+    } else if (test_type == 'One Mean') {
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
@@ -319,7 +319,7 @@ server <- function(input, output) {
     alpha <- input$alpha
     hypothesis_type <- input$alternative
 
-    if (test_type == "One Sample Proportion") {
+    if (test_type == "One Proportion") {
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -365,7 +365,7 @@ server <- function(input, output) {
           )
         }
       }
-    } else if (test_type == 'One Sample Mean') {
+    } else if (test_type == 'One Mean') {
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
@@ -465,7 +465,7 @@ server <- function(input, output) {
     alpha <- input$alpha
     hypothesis_type <- input$alternative
 
-    if (test_type == "One Sample Proportion") {
+    if (test_type == "One Proportion") {
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -512,7 +512,7 @@ server <- function(input, output) {
           )
         }
       }
-    } else if (test_type == 'One Sample Mean') {
+    } else if (test_type == 'One Mean') {
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
