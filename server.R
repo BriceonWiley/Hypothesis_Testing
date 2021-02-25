@@ -2,10 +2,8 @@
 
 server <- function(input, output) {
 
-
-# Make Plots --------------------------------------------------------------
-
   update_plot <- eventReactive(input$update, {
+    # Plot ----------------------------------------------------------------
     test_type <- input$test
 
     if (test_type == "One Proportion") {
@@ -306,15 +304,14 @@ server <- function(input, output) {
       }
       dependent_samples
     } else if (test_type == 'Independent Samples') {
-
+      # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
 
     }
   })
 
-# Make Results ------------------------------------------------------------
-
   update_distribution <- eventReactive(input$update, {
+    # Distribution --------------------------------------------------------
     test_type <- input$test
 
     if (test_type == 'One Proportion') {
@@ -370,6 +367,7 @@ server <- function(input, output) {
   })
 
   update_transformation <- eventReactive(input$update, {
+    # Transformation ------------------------------------------------------
     test_type <- input$test
 
     if (test_type == 'One Proportion') {
@@ -432,11 +430,13 @@ server <- function(input, output) {
   })
 
   update_pvalue_stat <- eventReactive(input$update, {
+    # P-Value Data --------------------------------------------------------
     test_type <- input$test
     alpha <- input$alpha
     hypothesis_type <- input$alternative
 
     if (test_type == "One Proportion") {
+      # One Sample Proportion ---------------------------------------------
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -483,6 +483,7 @@ server <- function(input, output) {
         }
       }
     } else if (test_type == 'One Mean') {
+      # One Sample Mean ---------------------------------------------------
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
@@ -574,6 +575,7 @@ server <- function(input, output) {
         }
       }
     } else if (test_type == 'Dependent Samples') {
+      # Dependent Mean ----------------------------------------------------
       D0 <- input$D0
       n <- input$n
       sigma <- input$sigd
@@ -623,18 +625,20 @@ server <- function(input, output) {
         }
       }
     } else if (test_type == 'Independent Samples') {
-
+      # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
 
     }
   })
 
   update_pvalue_z <- eventReactive(input$update, {
+    # P-Value Test Stat ---------------------------------------------------
     test_type <- input$test
     alpha <- input$alpha
     hypothesis_type <- input$alternative
 
     if (test_type == "One Proportion") {
+      # One Sample Proportion ---------------------------------------------
       p <- input$p
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
@@ -682,6 +686,7 @@ server <- function(input, output) {
         }
       }
     } else if (test_type == 'One Mean') {
+      # One Sample Mean ---------------------------------------------------
       mu <- input$mu
       n <- input$n
       sigma <- input$sig
@@ -773,6 +778,60 @@ server <- function(input, output) {
           }
         }
       }
+    } else if (test_type == 'Dependent Samples') {
+      # One Sample Mean ---------------------------------------------------
+      D0 <- input$D0
+      n <- input$n
+      sigma <- input$sigd
+      std <- input$sigd / sqrt(n)
+      dbar <- input$dbar
+      t <- (dbar - D0) / std
+      df <- n - 1
+
+      if (hypothesis_type == '<') {
+        # less than or equal to
+        pvalue <- pt(t, df)
+        withMathJax(
+          sprintf(
+            '$$P\\left(T\\leq %.02f \\right) = %.04f$$',
+            t, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '>') {
+        # greater than or equal to
+        pvalue <- 1 - pt(t, df)
+        withMathJax(
+          sprintf(
+            '$$P\\left(T\\geq %.02f \\right) = 1-P\\left(T< %.02f \\right) = %.04f$$',
+            t, t, pvalue
+          )
+        )
+
+      } else if (hypothesis_type == '≠') {
+        # not equal to
+        if (dbar >= D0) {
+          pvalue <- 2 * (1 - pt(t, df))
+          withMathJax(
+            sprintf(
+              '$$P\\left(|T|\\geq %.02f \\right) = 2*\\left(1-P\\left(T\\leq %.02f \\right)\\right) = %.04f$$',
+              t, t, pvalue
+            )
+          )
+        } else {
+          pvalue <- 2 * (pt(t, df))
+          withMathJax(
+            sprintf(
+              '$$P\\left(|T|\\leq %.02f \\right) = 2*P\\left(T\\leq %.02f \\right) = %.04f$$',
+              t, t, pvalue
+            )
+          )
+        }
+      }
+    } else if (test_type == 'Independent Samples') {
+
+    } else if (test_type == 'Two Proportions') {
+
     }
   })
 
