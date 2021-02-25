@@ -51,7 +51,7 @@ ui <- fluidPage(
 
 # One Sample Proportion ---------------------------------------------------
       conditionalPanel(
-        condition = "input.test == 'One Sample Proportion'",
+        condition = "input.test == 'One Proportion'",
         fluidRow(
           column(
             width = 6,
@@ -72,7 +72,7 @@ ui <- fluidPage(
 
 # One Sample Mean ---------------------------------------------------------
       conditionalPanel(
-        condition = "input.test == 'One Sample Mean'",
+        condition = "input.test == 'One Mean'",
         fluidRow(
           column(
             width = 6,
@@ -98,13 +98,20 @@ ui <- fluidPage(
         )
       ),
 
-# Two Samples Mean --------------------------------------------------------
+# Dependent Samples -------------------------------------------------------
       conditionalPanel(
-        condition = "input.test == 'Two Samples Mean'",
+        condition = "input.test == 'Dependent Samples'",
         fluidRow(
           column()
         )
       ),
+
+# Independent Samples -----------------------------------------------------
+
+
+# Two Proportions ---------------------------------------------------------
+
+
 
       fluidRow(
           actionButton(
