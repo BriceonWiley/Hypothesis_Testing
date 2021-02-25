@@ -102,7 +102,22 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.test == 'Dependent Samples'",
         fluidRow(
-          # column()
+          column(
+            width = 6,
+            numericInput("D0", "Null Difference", value = 0)
+          ),
+          column(
+            width = 6,
+            numericInput("dbar", "Sample Difference", value = 0)
+          )
+        ),
+        fluidRow(
+          column(
+            width = 6,
+            numericInput(
+              "sigd", label = 'Standard Deviation', value = 1, min = 0
+            )
+          )
         )
       ),
 
