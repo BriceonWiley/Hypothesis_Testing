@@ -148,17 +148,10 @@ ui <- fluidPage(
         tabPanel('Plot', plotOutput("distPlot")),
         tabPanel(
           title = 'Results',
-          fluidRow(
-            column(6,
-              uiOutput('distribution'),
-              uiOutput('transform'),
-              uiOutput('CI')
-            ),
-            column(6,
-              uiOutput('pvalue_stat'),
-              uiOutput('pvalue_z')
-            )
-          )
+          fluidRow(uiOutput('distribution')),
+          fluidRow(uiOutput('pvalue_stat')),
+          fluidRow(uiOutput('pvalue_z')),
+          fluidRow(uiOutput('CI'))
         )
       ), #width = 9
     )
