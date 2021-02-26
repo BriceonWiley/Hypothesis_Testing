@@ -320,67 +320,13 @@ server <- function(input, output) {
       n <- input$n
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
-      withMathJax(
-        sprintf(
-          '$$\\hat{p}\\dot\\sim\\mathcal{N}\\left(%.02f,\\sqrt{\\frac{%0.2f*%0.2f}{%0.f}}=%.03f\\right)$$',
-          p, p, 1 - p, n, sigma
-        )
-      )
-    } else if (test_type == 'One Mean') {
-      # One Sample Mean ---------------------------------------------------
-      mu <- input$mu
-      n <- input$n
-      sigma <- input$sig
-      std <- input$sig / sqrt(n)
-      xbar <- input$xbar
-      df <- n - 1
-      if (input$std_src == 'Population') {
-        withMathJax(
-          sprintf(
-            '$$\\bar{x}\\dot\\sim\\mathcal{N}\\left(%.02f,\\frac{%0.2f}{\\sqrt{%0.f}}=%.03f\\right)$$',
-            mu, sigma, n, std
-          )
-        )
-      } else if (input$std_src == 'Sample') {
-        withMathJax(
-          sprintf(
-            '$$T=\\frac{\\bar{x}-\\mu}{s/\\sqrt{n}}\\sim t_{%0.f}$$',
-            df
-          )
-        )
-      }
-    } else if (test_type == 'Dependent Samples') {
-      # Dependent Mean ----------------------------------------------------
-      n <- input$n
-      df <- n - 1
-      withMathJax(
-        sprintf(
-          '$$T=\\frac{\\bar{d}-D_0}{s_d/\\sqrt{n}}\\sim t_{%0.f}$$',
-          df
-        )
-      )
-    } else if (test_type == 'Independent Samples') {
-      # Independent Mean --------------------------------------------------
-    } else if (test_type == 'Two Proportions') {
-      # Two Proportions ---------------------------------------------------
-    }
-  })
-
-  update_transformation <- eventReactive(input$update, {
-    # Transformation ------------------------------------------------------
-    test_type <- input$test
-
-    if (test_type == 'One Proportion') {
-      # One Sample Proportion ---------------------------------------------
-      p <- input$p
-      n <- input$n
-      sigma <- sqrt(p * (1 - p) / n)
-      phat <- input$phat
       z <- (phat - p) / sigma
       withMathJax(
         sprintf(
-          '$$Z=\\frac{%.02f-%0.2f}{%.03f}=%.02f$$',
-          phat, p, sigma, z
+          '$$\\hat{p}\\dot\\sim\\mathcal{N}\\left(%.02f,
+          \\sqrt{\\frac{%0.2f*%0.2f}{%0.f}}=%.03f\\right)\\rightarrow
+          Z=\\frac{%.02f-%0.2f}{%.03f}=%.02f$$',
+          p, p, 1 - p, n, sigma, phat, p, sigma, z
         )
       )
     } else if (test_type == 'One Mean') {
@@ -390,20 +336,23 @@ server <- function(input, output) {
       sigma <- input$sig
       std <- input$sig / sqrt(n)
       xbar <- input$xbar
-      z <- (xbar - mu) / std
+      zt <- (xbar - mu) / std
       df <- n - 1
       if (input$std_src == 'Population') {
         withMathJax(
           sprintf(
-            '$$Z=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
-            xbar, mu, sigma, n, z
+            '$$\\bar{x}\\dot\\sim\\mathcal{N}\\left(%.02f,
+            \\frac{%0.2f}{\\sqrt{%0.f}}=%.03f\\right)\\rightarrow
+            Z=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
+            mu, sigma, n, std, xbar, mu, sigma, n, zt
           )
         )
       } else if (input$std_src == 'Sample') {
         withMathJax(
           sprintf(
-            '$$T=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
-            xbar, mu, sigma, n, z
+            '$$T=\\frac{\\bar{x}-\\mu}{s/\\sqrt{n}}\\sim t_{%0.f}\\rightarrow
+            T=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
+            df, xbar, mu, sigma, n, zt
           )
         )
       }
@@ -418,8 +367,9 @@ server <- function(input, output) {
       df <- n - 1
       withMathJax(
         sprintf(
-          '$$T=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
-          dbar, D0, sigma, n, t
+          '$$T=\\frac{\\bar{d}-D_0}{s_d/\\sqrt{n}}\\sim t_{%0.f}\\rightarrow
+          T=\\frac{%.02f-%0.2f}{%.02f/\\sqrt{%0.f}}=%.02f$$',
+          df, dbar, D0, sigma, n, t
         )
       )
     } else if (test_type == 'Independent Samples') {
@@ -879,7 +829,7 @@ server <- function(input, output) {
         withMathJax(
           sprintf(
             '$$\\hat{p}\\pm Z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}
-            =%.02f\\pm %.02f\\sqrt{\\frac{%.02f(%.02f)}{%.0f}}
+            =%.02f\\pm %.02f\\sqrt{\\frac{%.02f*%.02f}{%.0f}}
             \\implies p\\in\\left(%.04f,%0.4f\\right)$$',
             phat, crit, phat, 1 - phat, n, lb, ub
           )
@@ -907,10 +857,6 @@ server <- function(input, output) {
 
   output$distribution <- renderUI({
     update_distribution()
-  })
-
-  output$transform <- renderUI({
-    update_transformation()
   })
 
   output$pvalue_stat <- renderUI({
