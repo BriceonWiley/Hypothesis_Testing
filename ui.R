@@ -93,8 +93,8 @@ ui <- fluidPage(
             width = 6,
             selectInput(
               'std_src', NULL, c('Population', 'Sample'), 'Population'
-            ),
-          ),
+            )
+          )
         )
       ),
 
@@ -103,17 +103,15 @@ ui <- fluidPage(
         condition = "input.test == 'Dependent Samples'",
         fluidRow(
           column(
-            width = 6,
+            width = 4,
             numericInput("D0", "Null Difference", value = 0)
           ),
           column(
-            width = 6,
+            width = 4,
             numericInput("dbar", "Sample Difference", value = 0)
-          )
-        ),
-        fluidRow(
+          ),
           column(
-            width = 6,
+            width = 4,
             numericInput(
               "sigd", label = 'Standard Deviation', value = 1, min = 0
             )
