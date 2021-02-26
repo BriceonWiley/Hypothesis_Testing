@@ -839,12 +839,57 @@ server <- function(input, output) {
       # One Sample Mean ---------------------------------------------------
     } else if (test_type == 'Dependent Samples') {
       # Dependent Mean ----------------------------------------------------
+      dbar <- input$dbar
+      n <- input$n
+      sig <- input$sigd
+      stderr <- sig / sqrt(n)
+      df <- n - 1
+
+      if (hypothesis_type == '<') {
+        # less than or equal to
+        crit <- qt(1 - alpha, df)
+        ub <- dbar + crit * stderr
+        withMathJax(
+          sprintf(
+            '$$\\bar{d}+t_{\\alpha}\\frac{s_d}{\\sqrt{n}}
+            =%0.2f+%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+            \\implies \\mu_d\\leq%0.4f$$',
+            dbar, crit, sig, n, ub
+          )
+        )
+      } else if (hypothesis_type == '>') {
+        # greater than or equal to
+        crit <- qt(1 - alpha, df)
+        lb <- dbar - crit * stderr
+        withMathJax(
+          sprintf(
+            '$$\\bar{d}-t_{\\alpha}\\frac{s_d}{\\sqrt{n}}
+            =%0.2f-%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+            \\implies \\mu_d\\geq%0.4f$$',
+            dbar, crit, sig, n, lb
+          )
+        )
+      } else if (hypothesis_type == '≠') {
+        # not equal to
+        crit <- qt(1 - alpha / 2, df)
+        lb <- dbar - crit * stderr
+        ub <- dbar + crit * stderr
+        withMathJax(
+          sprintf(
+            '$$\\bar{d}\\pm t_{\\alpha/2}\\frac{s_d}{\\sqrt{n}}
+            =%0.2f\\pm%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+            \\implies \\mu_d\\in\\left(%0.4f,%0.4f\\right)$$',
+            dbar, crit, sig, n, lb, ub
+          )
+        )
+      }
     } else if (test_type == 'Independent Samples') {
       # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
       # Two Proportions ---------------------------------------------------
     }
   })
+
 
 # Display Plots -----------------------------------------------------------
 
