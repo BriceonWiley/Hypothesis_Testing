@@ -306,7 +306,7 @@ server <- function(input, output) {
     } else if (test_type == 'Independent Samples') {
       # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
-
+      # Two Proportions ---------------------------------------------------
     }
   })
 
@@ -362,7 +362,7 @@ server <- function(input, output) {
     } else if (test_type == 'Independent Samples') {
       # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
-
+      # Two Proportions ---------------------------------------------------
     }
   })
 
@@ -425,7 +425,7 @@ server <- function(input, output) {
     } else if (test_type == 'Independent Samples') {
       # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
-
+      # Two Proportions ---------------------------------------------------
     }
   })
 
@@ -627,7 +627,7 @@ server <- function(input, output) {
     } else if (test_type == 'Independent Samples') {
       # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
-
+      # Two Proportions ---------------------------------------------------
     }
   })
 
@@ -779,7 +779,7 @@ server <- function(input, output) {
         }
       }
     } else if (test_type == 'Dependent Samples') {
-      # One Sample Mean ---------------------------------------------------
+      # Dependent Mean ----------------------------------------------------
       D0 <- input$D0
       n <- input$n
       sigma <- input$sigd
@@ -829,9 +829,70 @@ server <- function(input, output) {
         }
       }
     } else if (test_type == 'Independent Samples') {
-
+      # Independent Mean --------------------------------------------------
     } else if (test_type == 'Two Proportions') {
+      # Two Proportions ---------------------------------------------------
+    }
+  })
 
+  update_ci <- eventReactive(input$update, {
+    # CI ------------------------------------------------------------------
+    test_type <- input$test
+    alpha <- input$alpha
+    hypothesis_type <- input$alternative
+
+    if (test_type == 'One Proportion') {
+      # One Sample Proportion ---------------------------------------------
+      phat <- input$phat
+      n <- input$n
+      stderr <- sqrt(phat * (1 - phat) / n)
+
+      if (hypothesis_type == '<') {
+        # less than or equal to
+        crit <- qnorm(1 - alpha)
+        ub <- phat + crit * stderr
+        withMathJax(
+          sprintf(
+            '$$\\hat{p}+Z_{\\alpha}\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}
+            =%.02f+%.02f\\sqrt{\\frac{%.02f(%.02f)}{%.0f}}
+            \\implies p\\leq%0.4f$$',
+            phat, crit, phat, 1 - phat, n, ub
+          )
+        )
+      } else if (hypothesis_type == '>') {
+        # greater than or equal to
+        crit <- qnorm(1 - alpha)
+        lb <- phat - crit * stderr
+        withMathJax(
+          sprintf(
+            '$$\\hat{p}+Z_{\\alpha}\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}
+            =%.02f-%.02f\\sqrt{\\frac{%.02f(%.02f)}{%.0f}}
+            \\implies p\\geq%0.4f$$',
+            phat, crit, phat, 1 - phat, n, lb
+          )
+        )
+      } else if (hypothesis_type == '≠') {
+        # not equal to
+        crit <- qnorm(1 - alpha / 2)
+        lb <- phat - crit * stderr
+        ub <- phat + crit * stderr
+        withMathJax(
+          sprintf(
+            '$$\\hat{p}\\pm Z_{\\alpha/2}\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}
+            =%.02f\\pm %.02f\\sqrt{\\frac{%.02f(%.02f)}{%.0f}}
+            \\implies p\\in\\left(%.04f,%0.4f\\right)$$',
+            phat, crit, phat, 1 - phat, n, lb, ub
+          )
+        )
+      }
+    } else if (test_type == 'One Mean') {
+      # One Sample Mean ---------------------------------------------------
+    } else if (test_type == 'Dependent Samples') {
+      # Dependent Mean ----------------------------------------------------
+    } else if (test_type == 'Independent Samples') {
+      # Independent Mean --------------------------------------------------
+    } else if (test_type == 'Two Proportions') {
+      # Two Proportions ---------------------------------------------------
     }
   })
 
@@ -858,5 +919,9 @@ server <- function(input, output) {
 
   output$pvalue_z <- renderUI({
     update_pvalue_z()
+  })
+
+  output$CI <- renderUI({
+    update_ci()
   })
 }
