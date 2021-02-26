@@ -152,12 +152,11 @@ ui <- fluidPage(
             column(6,
               uiOutput('distribution'),
               uiOutput('transform'),
-              uiOutput('CI_template')
+              uiOutput('CI')
             ),
             column(6,
               uiOutput('pvalue_stat'),
-              uiOutput('pvalue_z'),
-              uiOutput('CI_real')
+              uiOutput('pvalue_z')
             )
           )
         )
