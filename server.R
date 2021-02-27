@@ -837,6 +837,92 @@ server <- function(input, output) {
       }
     } else if (test_type == 'One Mean') {
       # One Sample Mean ---------------------------------------------------
+      xbar <- input$xbar
+      n <- input$n
+      sig <- input$sig
+      stderr <- sig / sqrt(n)
+
+      if (input$std_src == 'Population') {
+        if (hypothesis_type == '<') {
+          # less than or equal to
+          crit <- qnorm(1 - alpha)
+          ub <- xbar + crit * stderr
+          withMathJax(
+            sprintf(
+              '$$\\bar{x}+Z_{\\alpha}\\frac{\\sigma}{\\sqrt{n}}
+              =%0.2f+%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+              \\implies \\mu\\leq%0.4f$$',
+              xbar, crit, sig, n, ub
+            )
+          )
+        } else if (hypothesis_type == '>') {
+          # greater than or equal to
+          crit <- qnorm(1 - alpha)
+          lb <- xbar - crit * stderr
+          withMathJax(
+            sprintf(
+              '$$\\bar{x}-Z_{\\alpha}\\frac{\\sigma}{\\sqrt{n}}
+              =%0.2f-%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+              \\implies \\mu\\geq%0.4f$$',
+              xbar, crit, sig, n, lb
+            )
+          )
+        } else if (hypothesis_type == '≠') {
+          # not equal to
+          crit <- qnorm(1 - alpha / 2)
+          lb <- xbar - crit * stderr
+          ub <- xbar + crit * stderr
+          withMathJax(
+            sprintf(
+              '$$\\bar{x}\\pm Z_{\\alpha/2}\\frac{\\sigma}{\\sqrt{n}}
+              =%0.2f\\pm%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+              \\implies \\mu\\in\\left(%0.4f,%0.4f\\right)$$',
+              xbar, crit, sig, n, lb, ub
+            )
+          )
+        }
+      } else if (input$std_src == 'Sample') {
+        df <- n - 1
+
+        if (hypothesis_type == '<') {
+          # less than or equal to
+          crit <- qt(1 - alpha, df)
+          ub <- xbar + crit * stderr
+          withMathJax(
+            sprintf(
+              '$$\\bar{x}+t_{\\alpha}\\frac{s}{\\sqrt{n}}
+              =%0.2f+%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+              \\implies \\mu\\leq%0.4f$$',
+              xbar, crit, sig, n, ub
+            )
+          )
+        } else if (hypothesis_type == '>') {
+          # greater than or equal to
+          crit <- qt(1 - alpha, df)
+          lb <- xbar - crit * stderr
+          withMathJax(
+            sprintf(
+              '$$\\bar{x}-t_{\\alpha}\\frac{s}{\\sqrt{n}}
+              =%0.2f-%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+              \\implies \\mu\\geq%0.4f$$',
+              xbar, crit, sig, n, lb
+            )
+          )
+        } else if (hypothesis_type == '≠') {
+          # not equal to
+          crit <- qt(1 - alpha / 2, df)
+          lb <- xbar - crit * stderr
+          ub <- xbar + crit * stderr
+          withMathJax(
+            sprintf(
+              '$$\\bar{x}\\pm t_{\\alpha/2}\\frac{s}{\\sqrt{n}}
+              =%0.2f\\pm%0.2f\\frac{%0.2f}{\\sqrt{%0.0f}}
+              \\implies \\mu\\in\\left(%0.4f,%0.4f\\right)$$',
+              xbar, crit, sig, n, lb, ub
+            )
+          )
+        }
+      }
     } else if (test_type == 'Dependent Samples') {
       # Dependent Mean ----------------------------------------------------
       dbar <- input$dbar
