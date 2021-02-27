@@ -246,7 +246,7 @@ server <- function(input, output) {
         geom_point(aes(x = 0, y = -0.0425 * dt(0, df)), shape = 17, size = 7) +
         lims(x = c(-4, 4)) +
         theme_minimal(21) +
-        labs(x = "Sample Mean", y = "Probability")
+        labs(x = "Sample Difference", y = "Probability")
 
       if (hypothesis_type == '<') {
         # less than or equal to
