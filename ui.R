@@ -52,7 +52,7 @@ ui <- fluidPage(
           column(
             width = 4,
             numericInput(
-              "p", "Null Proportion:",
+              "p", "Null Proportion",
               value = 0.5, min = 0, max = 1, step = 0.01
             )
           ),
@@ -65,7 +65,8 @@ ui <- fluidPage(
           ),
           column(
             width = 4,
-            numericInput("np", "Sample Size", value = 25)
+            numericInput("np", "Sample Size", value = 25),
+
           )
         )
       ),
