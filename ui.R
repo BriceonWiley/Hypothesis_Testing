@@ -4,7 +4,7 @@ library(shiny)
 library(ggplot2)
 library(shinyWidgets)
 
-# Define UI for application that draws a histogram
+# Define UI for application
 ui <- fluidPage(
 
   # Application title
