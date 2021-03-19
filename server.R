@@ -10,7 +10,7 @@ server <- function(input, output) {
       # One Sample Proportion ---------------------------------------------
       # necessary set up
       p <- input$p
-      n <- input$n
+      n <- input$np
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
       alpha <- input$alpha
@@ -86,7 +86,7 @@ server <- function(input, output) {
       # One Sample Mean ---------------------------------------------------
       # necessary set up
       mu <- input$mu
-      n <- input$n
+      n <- input$nmu
       std <- input$sig / sqrt(n)
       xbar <- input$xbar
       alpha <- input$alpha
@@ -229,7 +229,7 @@ server <- function(input, output) {
     } else if (test_type == 'Dependent Samples') {
       # Dependent Mean ----------------------------------------------------
       D0 <- input$D0
-      n <- input$n
+      n <- input$nd
       std <- input$sigd / sqrt(n)
       dbar <- input$dbar
       alpha <- input$alpha
@@ -317,7 +317,7 @@ server <- function(input, output) {
     if (test_type == 'One Proportion') {
       # One Sample Proportion ---------------------------------------------
       p <- input$p
-      n <- input$n
+      n <- input$np
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
       z <- (phat - p) / sigma
@@ -332,7 +332,7 @@ server <- function(input, output) {
     } else if (test_type == 'One Mean') {
       # One Sample Mean ---------------------------------------------------
       mu <- input$mu
-      n <- input$n
+      n <- input$nmu
       sigma <- input$sig
       std <- input$sig / sqrt(n)
       xbar <- input$xbar
@@ -359,7 +359,7 @@ server <- function(input, output) {
     } else if (test_type == 'Dependent Samples') {
       # Dependent Mean ----------------------------------------------------
       D0 <- input$D0
-      n <- input$n
+      n <- input$nd
       sigma <- input$sigd
       std <- input$sigd / sqrt(n)
       dbar <- input$dbar
@@ -388,7 +388,7 @@ server <- function(input, output) {
     if (test_type == "One Proportion") {
       # One Sample Proportion ---------------------------------------------
       p <- input$p
-      n <- input$n
+      n <- input$np
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
 
@@ -435,7 +435,7 @@ server <- function(input, output) {
     } else if (test_type == 'One Mean') {
       # One Sample Mean ---------------------------------------------------
       mu <- input$mu
-      n <- input$n
+      n <- input$nmu
       sigma <- input$sig
       std <- input$sig / sqrt(n)
       xbar <- input$xbar
@@ -527,7 +527,7 @@ server <- function(input, output) {
     } else if (test_type == 'Dependent Samples') {
       # Dependent Mean ----------------------------------------------------
       D0 <- input$D0
-      n <- input$n
+      n <- input$nd
       sigma <- input$sigd
       std <- input$sigd / sqrt(n)
       dbar <- input$dbar
@@ -590,7 +590,7 @@ server <- function(input, output) {
     if (test_type == "One Proportion") {
       # One Sample Proportion ---------------------------------------------
       p <- input$p
-      n <- input$n
+      n <- input$np
       sigma <- sqrt(p * (1 - p) / n)
       phat <- input$phat
       z <- (phat - p) / sigma
@@ -638,7 +638,7 @@ server <- function(input, output) {
     } else if (test_type == 'One Mean') {
       # One Sample Mean ---------------------------------------------------
       mu <- input$mu
-      n <- input$n
+      n <- input$nmu
       sigma <- input$sig
       std <- sigma / sqrt(n)
       xbar <- input$xbar
@@ -731,7 +731,7 @@ server <- function(input, output) {
     } else if (test_type == 'Dependent Samples') {
       # Dependent Mean ----------------------------------------------------
       D0 <- input$D0
-      n <- input$n
+      n <- input$nd
       sigma <- input$sigd
       std <- input$sigd / sqrt(n)
       dbar <- input$dbar
@@ -794,7 +794,7 @@ server <- function(input, output) {
     if (test_type == 'One Proportion') {
       # One Sample Proportion ---------------------------------------------
       phat <- input$phat
-      n <- input$n
+      n <- input$np
       stderr <- sqrt(phat * (1 - phat) / n)
 
       if (hypothesis_type == '<') {
@@ -838,7 +838,7 @@ server <- function(input, output) {
     } else if (test_type == 'One Mean') {
       # One Sample Mean ---------------------------------------------------
       xbar <- input$xbar
-      n <- input$n
+      n <- input$nmu
       sig <- input$sig
       stderr <- sig / sqrt(n)
 
@@ -926,7 +926,7 @@ server <- function(input, output) {
     } else if (test_type == 'Dependent Samples') {
       # Dependent Mean ----------------------------------------------------
       dbar <- input$dbar
-      n <- input$n
+      n <- input$nd
       sig <- input$sigd
       stderr <- sig / sqrt(n)
       df <- n - 1

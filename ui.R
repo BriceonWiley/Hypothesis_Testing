@@ -17,7 +17,7 @@ ui <- fluidPage(
     sidebarPanel(
       fluidRow(
         column(
-          width = 8,
+          width = 12,
           selectInput(
             "test", "Type of Test:",
             choices = c(
@@ -28,15 +28,11 @@ ui <- fluidPage(
               "Two Proportions"
             ), selected = 'Dependent Samples'
           )
-        ),
-        column(
-          width = 4,
-          numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
         )
       ),
       fluidRow(
         column(
-          width = 6,
+          width = 7,
           radioButtons(
             'alternative', 'Alternative Hypothesis:',
             choices = c("<", ">", "≠"),
@@ -44,8 +40,8 @@ ui <- fluidPage(
           )
         ),
         column(
-          width = 6,
-          numericInput("n", "Sample Size", value = 25)
+          width = 5,
+          numericInput("alpha", "α", value = 0.05, min = 0, max = 1, step = 0.01)
         )
       ),
 
@@ -54,18 +50,22 @@ ui <- fluidPage(
         condition = "input.test == 'One Proportion'",
         fluidRow(
           column(
-            width = 6,
+            width = 4,
             numericInput(
               "p", "Null Proportion:",
               value = 0.5, min = 0, max = 1, step = 0.01
             )
           ),
           column(
-            width = 6,
+            width = 4,
             numericInput(
               "phat", "Sample Proportion",
               value = 0.5, min = 0, max = 1, step = 0.01
             )
+          ),
+          column(
+            width = 4,
+            numericInput("np", "Sample Size", value = 25)
           )
         )
       ),
@@ -75,12 +75,16 @@ ui <- fluidPage(
         condition = "input.test == 'One Mean'",
         fluidRow(
           column(
-            width = 6,
+            width = 4,
             numericInput("mu", "Null Mean", value = 0)
           ),
           column(
-            width = 6,
+            width = 4,
             numericInput("xbar", "Sample Mean", value = 0)
+          ),
+          column(
+            width = 4,
+            numericInput("nmu", "Sample Size", value = 25)
           )
         ),
         h5('Standard Deviation:'),
@@ -103,18 +107,24 @@ ui <- fluidPage(
         condition = "input.test == 'Dependent Samples'",
         fluidRow(
           column(
-            width = 4,
+            width = 6,
             numericInput("D0", "Null Difference", value = 0)
           ),
           column(
-            width = 4,
+            width = 6,
             numericInput("dbar", "Sample Difference", value = 0)
-          ),
+          )
+        ),
+        fluidRow(
           column(
-            width = 4,
+            width = 6,
             numericInput(
               "sigd", label = 'Standard Deviation', value = 1, min = 0
             )
+          ),
+          column(
+            width = 6,
+            numericInput("nd", "Sample Size", value = 25)
           )
         )
       ),
